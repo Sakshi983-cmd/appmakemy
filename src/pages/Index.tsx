@@ -587,7 +587,7 @@ const Index = () => {
                 <motion.a key={p.title + i} href={isLink ? p.url : undefined} target={isLink ? "_blank" : undefined} rel={isLink ? "noopener noreferrer" : undefined}
                   initial={{ opacity: 0, scale: 0.92 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ delay: Math.min(i * 0.02, 0.4) }}
                   className="group relative rounded-2xl overflow-hidden bg-white border border-gray-200 hover:border-transparent hover:shadow-xl hover:shadow-orange-500/10 hover:-translate-y-1 transition-all duration-300 cursor-pointer block">
-                  <BrandTile title={p.title} tag={p.tag} palette={palette} />
+                  <BrandTile title={p.title} tag={p.tag} palette={palette} url={p.url} />
                   <div className="p-3">
                     <h3 className="text-sm font-bold text-gray-900 truncate">{p.title}</h3>
                     <div className="flex items-center justify-between mt-1">
