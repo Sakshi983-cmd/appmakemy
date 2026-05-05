@@ -528,17 +528,18 @@ const Index = () => {
                 initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.15 }}
                 className="group relative rounded-2xl overflow-hidden border border-gray-200 bg-white hover:shadow-2xl hover:-translate-y-1 transition-all duration-500">
                 <div className="relative h-56 overflow-hidden" style={{ background: p.bg }}>
-                  <div className="absolute inset-0 opacity-40 mix-blend-overlay">
+                  <div className="absolute inset-0 opacity-30 mix-blend-overlay">
                     <img src={p.image} alt={p.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
                   </div>
+                  <div className="absolute inset-0 opacity-[0.18]" style={{ backgroundImage: "radial-gradient(rgba(255,255,255,.7) 1px, transparent 1px)", backgroundSize: "16px 16px" }} />
                   {/* Branded badge */}
                   <div className="absolute top-4 left-4 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/95 backdrop-blur-sm shadow-sm">
                     <p.badgeIcon className="w-3.5 h-3.5" style={{ color: p.accent }} />
                     <span className="text-xs font-bold uppercase tracking-wider" style={{ color: p.accent }}>{p.badge}</span>
                   </div>
-                  {/* Big initial mark for brand feel */}
-                  <div className="absolute bottom-4 right-4 text-6xl font-black text-white/30 leading-none">
-                    {p.title[0]}
+                  {/* Real brand logo */}
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <BrandLogo url={p.url} title={p.title} size={96} />
                   </div>
                 </div>
                 <div className="p-5">
