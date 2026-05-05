@@ -261,17 +261,48 @@ function ChatPanel({ open, onClose }: { open: boolean; onClose: () => void }) {
   );
 }
 
-function BrandTile({ title, tag, palette, large = false }: { title: string; tag: string; palette: { from: string; to: string }; large?: boolean }) {
+function getDomain(url?: string) {
+  if (!url || url === "#") return null;
+  try { return new URL(url).hostname.replace(/^www\./, ""); } catch { return null; }
+}
+
+function BrandLogo({ url, title, size = 48 }: { url?: string; title: string; size?: number }) {
+  const domain = getDomain(url);
+  const [errored, setErrored] = useState(false);
   const initials = title.split(" ").slice(0, 2).map((w) => w[0]).join("").toUpperCase();
+  if (!domain || errored) {
+    return (
+      <div className="font-extrabold text-white tracking-tight drop-shadow-md" style={{ fontSize: size * 0.55 }}>
+        {initials}
+      </div>
+    );
+  }
   return (
-    <div className={`relative ${large ? "h-48 sm:h-56" : "h-24 sm:h-28"} overflow-hidden flex items-center justify-center`}
+    <div className="rounded-xl bg-white shadow-lg flex items-center justify-center overflow-hidden p-2"
+      style={{ width: size, height: size }}>
+      <img
+        src={`https://logo.clearbit.com/${domain}`}
+        alt={`${title} logo`}
+        loading="lazy"
+        onError={() => setErrored(true)}
+        className="w-full h-full object-contain"
+      />
+    </div>
+  );
+}
+
+function BrandTile({ title, tag, palette, url, large = false }: { title: string; tag: string; palette: { from: string; to: string }; url?: string; large?: boolean }) {
+  return (
+    <div className={`relative ${large ? "h-48 sm:h-56" : "h-28 sm:h-32"} overflow-hidden flex items-center justify-center`}
       style={{ background: `linear-gradient(135deg, ${palette.from}, ${palette.to})` }}>
       <div className="absolute inset-0 opacity-30" style={{ background: `radial-gradient(circle at 30% 20%, rgba(255,255,255,.6), transparent 50%)` }} />
       <div className="absolute -right-4 -bottom-6 w-24 h-24 rounded-full bg-white/10 blur-xl" />
       <div className="absolute -left-4 -top-6 w-20 h-20 rounded-full bg-black/10 blur-xl" />
-      <div className="relative z-10 text-center px-2">
-        <div className={`${large ? "text-5xl" : "text-2xl"} font-extrabold text-white tracking-tight drop-shadow-md`}>{initials}</div>
-        {large && <div className="mt-2 text-xs font-semibold uppercase tracking-widest text-white/80">{tag}</div>}
+      {/* subtle dotted pattern */}
+      <div className="absolute inset-0 opacity-[0.15]" style={{ backgroundImage: "radial-gradient(rgba(255,255,255,.6) 1px, transparent 1px)", backgroundSize: "14px 14px" }} />
+      <div className="relative z-10 flex flex-col items-center gap-2 px-2">
+        <BrandLogo url={url} title={title} size={large ? 96 : 56} />
+        {large && <div className="mt-1 text-xs font-semibold uppercase tracking-widest text-white/90">{tag}</div>}
       </div>
     </div>
   );
