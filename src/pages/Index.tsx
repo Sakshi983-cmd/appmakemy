@@ -8,6 +8,14 @@ import {
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { supabase } from "@/integrations/supabase/client";
+import qviqLogo from "@/assets/qviq-logo.png";
+import dmaLogo from "@/assets/dma-logo.png";
+
+const CUSTOM_LOGOS: Record<string, string> = {
+  "qviq.io": qviqLogo,
+  "www.dmassociates.in": dmaLogo,
+  "dmassociates.in": dmaLogo,
+};
 
 const openCalendly = () => window.open("https://calendly.com/makemyapp-co/30-minutes-consultation-call", "_blank");
 const openWhatsApp = () => window.open("https://api.whatsapp.com/send?phone=919242424232", "_blank");
@@ -266,25 +274,37 @@ function getDomain(url?: string) {
   try { return new URL(url).hostname.replace(/^www\./, ""); } catch { return null; }
 }
 
-function BrandLogo({ url, title, size = 48 }: { url?: string; title: string; size?: number }) {
+function BrandLogo({ url, title, size = 48, rounded = true }: { url?: string; title: string; size?: number; rounded?: boolean }) {
   const domain = getDomain(url);
-  const [errored, setErrored] = useState(false);
+  const custom = domain ? CUSTOM_LOGOS[domain] : undefined;
+  const [stage, setStage] = useState<"primary" | "fallback" | "initials">(custom ? "primary" : domain ? "primary" : "initials");
   const initials = title.split(" ").slice(0, 2).map((w) => w[0]).join("").toUpperCase();
-  if (!domain || errored) {
+
+  if (stage === "initials" || (!custom && !domain)) {
     return (
-      <div className="font-extrabold text-white tracking-tight drop-shadow-md" style={{ fontSize: size * 0.55 }}>
-        {initials}
+      <div className={`flex items-center justify-center bg-white shadow-lg ${rounded ? "rounded-2xl" : ""}`}
+        style={{ width: size, height: size }}>
+        <span className="font-black tracking-tight bg-gradient-to-br from-gray-900 to-gray-600 bg-clip-text text-transparent" style={{ fontSize: size * 0.42 }}>
+          {initials}
+        </span>
       </div>
     );
   }
+
+  const src = custom
+    ? custom
+    : stage === "primary"
+      ? `https://logo.clearbit.com/${domain}`
+      : `https://www.google.com/s2/favicons?domain=${domain}&sz=128`;
+
   return (
-    <div className="rounded-xl bg-white shadow-lg flex items-center justify-center overflow-hidden p-2"
+    <div className={`bg-white shadow-lg flex items-center justify-center overflow-hidden p-2 ${rounded ? "rounded-2xl" : ""}`}
       style={{ width: size, height: size }}>
       <img
-        src={`https://logo.clearbit.com/${domain}`}
+        src={src}
         alt={`${title} logo`}
         loading="lazy"
-        onError={() => setErrored(true)}
+        onError={() => setStage((s) => (custom ? "initials" : s === "primary" ? "fallback" : "initials"))}
         className="w-full h-full object-contain"
       />
     </div>
@@ -293,16 +313,19 @@ function BrandLogo({ url, title, size = 48 }: { url?: string; title: string; siz
 
 function BrandTile({ title, tag, palette, url, large = false }: { title: string; tag: string; palette: { from: string; to: string }; url?: string; large?: boolean }) {
   return (
-    <div className={`relative ${large ? "h-48 sm:h-56" : "h-28 sm:h-32"} overflow-hidden flex items-center justify-center`}
+    <div className={`relative ${large ? "h-48 sm:h-56" : "h-36 sm:h-40"} overflow-hidden flex items-center justify-center`}
       style={{ background: `linear-gradient(135deg, ${palette.from}, ${palette.to})` }}>
-      <div className="absolute inset-0 opacity-30" style={{ background: `radial-gradient(circle at 30% 20%, rgba(255,255,255,.6), transparent 50%)` }} />
-      <div className="absolute -right-4 -bottom-6 w-24 h-24 rounded-full bg-white/10 blur-xl" />
-      <div className="absolute -left-4 -top-6 w-20 h-20 rounded-full bg-black/10 blur-xl" />
-      {/* subtle dotted pattern */}
-      <div className="absolute inset-0 opacity-[0.15]" style={{ backgroundImage: "radial-gradient(rgba(255,255,255,.6) 1px, transparent 1px)", backgroundSize: "14px 14px" }} />
+      {/* glow accents */}
+      <div className="absolute inset-0 opacity-40" style={{ background: `radial-gradient(circle at 25% 15%, rgba(255,255,255,.7), transparent 55%)` }} />
+      <div className="absolute -right-6 -bottom-8 w-32 h-32 rounded-full bg-white/15 blur-2xl" />
+      <div className="absolute -left-6 -top-8 w-28 h-28 rounded-full bg-black/15 blur-2xl" />
+      {/* mesh grid */}
+      <div className="absolute inset-0 opacity-[0.18]" style={{ backgroundImage: "linear-gradient(rgba(255,255,255,.4) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.4) 1px, transparent 1px)", backgroundSize: "22px 22px" }} />
+      {/* shine sweep on hover */}
+      <div className="absolute inset-y-0 -left-1/2 w-1/2 bg-gradient-to-r from-transparent via-white/30 to-transparent skew-x-12 group-hover:translate-x-[300%] transition-transform duration-1000" />
       <div className="relative z-10 flex flex-col items-center gap-2 px-2">
-        <BrandLogo url={url} title={title} size={large ? 96 : 56} />
-        {large && <div className="mt-1 text-xs font-semibold uppercase tracking-widest text-white/90">{tag}</div>}
+        <BrandLogo url={url} title={title} size={large ? 104 : 72} />
+        <div className={`mt-1 ${large ? "text-xs" : "text-[10px]"} font-bold uppercase tracking-[0.18em] text-white/95 px-2.5 py-0.5 rounded-full bg-black/25 backdrop-blur-sm`}>{tag}</div>
       </div>
     </div>
   );
