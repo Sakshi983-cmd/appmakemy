@@ -473,12 +473,25 @@ const Index = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
             {SERVICES.map((s, i) => (
               <motion.div key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.07 }}
-                className="group rounded-2xl border border-gray-200 bg-white p-6 hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
-                <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-4" style={{ background: `${s.color}25` }}>
-                  <s.icon className="w-6 h-6" style={{ color: s.color }} />
+                className="group relative rounded-3xl border border-gray-200 bg-white p-6 hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 overflow-hidden">
+                {/* gradient orb bg */}
+                <div className={`absolute -top-16 -right-16 w-40 h-40 rounded-full bg-gradient-to-br ${s.gradient} opacity-10 group-hover:opacity-25 group-hover:scale-125 transition-all duration-700 blur-2xl`} />
+                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" style={{ backgroundImage: "radial-gradient(circle at 50% 0%, rgba(124,58,237,.06), transparent 60%)" }} />
+                {/* icon block */}
+                <div className={`relative w-16 h-16 rounded-2xl bg-gradient-to-br ${s.gradient} flex items-center justify-center mb-5 shadow-lg group-hover:scale-110 group-hover:rotate-6 transition-all duration-500`}>
+                  <s.icon className="w-7 h-7 text-white" strokeWidth={2.2} />
+                  <div className="absolute -top-2 -right-2 w-7 h-7 rounded-full bg-white shadow-md flex items-center justify-center text-base">{s.emoji}</div>
                 </div>
-                <h3 className="text-lg font-bold text-gray-900 mb-2">{s.title}</h3>
-                <p className="text-sm text-gray-500 leading-relaxed">{s.desc}</p>
+                <h3 className="relative text-lg font-bold text-gray-900 mb-2">{s.title}</h3>
+                <p className="relative text-sm text-gray-500 leading-relaxed mb-4">{s.desc}</p>
+                <div className="relative flex flex-wrap gap-1.5">
+                  {s.tags.map((t) => (
+                    <span key={t} className="text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full bg-gray-100 text-gray-600 group-hover:bg-white group-hover:shadow-sm transition-all">{t}</span>
+                  ))}
+                </div>
+                <div className="absolute bottom-3 right-4 opacity-0 group-hover:opacity-100 group-hover:translate-x-0 -translate-x-2 transition-all duration-300">
+                  <ArrowRight className="w-4 h-4" style={{ color: s.color }} />
+                </div>
               </motion.div>
             ))}
           </div>
