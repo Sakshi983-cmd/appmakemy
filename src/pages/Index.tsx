@@ -536,18 +536,25 @@ const Index = () => {
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-gray-900 mb-4">Our Process</h2>
             <p className="text-gray-500 max-w-2xl mx-auto text-lg">A streamlined approach to high-quality delivery.</p>
           </div>
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-4 lg:gap-6">
-            {PROCESS.map((s, i) => (
-              <motion.div key={i} initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}
-                className="text-center bg-white rounded-2xl border border-gray-100 p-6 hover:shadow-xl transition-all">
-                <div className="relative w-16 h-16 mx-auto mb-4 rounded-2xl flex items-center justify-center" style={{ background: `${s.color}20` }}>
-                  <s.icon className="w-7 h-7" style={{ color: s.color }} />
-                </div>
-                <div className="inline-flex items-center justify-center w-7 h-7 rounded-full text-white text-xs font-bold mb-2" style={{ background: s.color }}>{i + 1}</div>
-                <h3 className="text-base font-bold text-gray-900 mb-2">{s.title}</h3>
-                <p className="text-sm text-gray-500 leading-relaxed">{s.desc}</p>
-              </motion.div>
-            ))}
+          <div className="relative">
+            {/* connector line */}
+            <div className="hidden md:block absolute top-12 left-[10%] right-[10%] h-0.5 bg-gradient-to-r from-violet-300 via-orange-300 to-rose-300 opacity-60" />
+            <div className="grid grid-cols-2 md:grid-cols-5 gap-4 lg:gap-6 relative">
+              {PROCESS.map((s, i) => (
+                <motion.div key={i} initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}
+                  className="group text-center relative">
+                  <div className="relative w-24 h-24 mx-auto mb-4">
+                    <div className="absolute inset-0 rounded-full blur-xl opacity-40 group-hover:opacity-70 transition-opacity" style={{ background: s.color }} />
+                    <div className="relative w-24 h-24 rounded-full flex items-center justify-center bg-white border-4 shadow-xl group-hover:scale-110 group-hover:-rotate-6 transition-all duration-500" style={{ borderColor: s.color }}>
+                      <s.icon className="w-9 h-9" style={{ color: s.color }} strokeWidth={2.2} />
+                    </div>
+                    <div className="absolute -top-1 -right-1 w-9 h-9 rounded-full text-white text-sm font-black flex items-center justify-center shadow-lg ring-4 ring-white" style={{ background: s.color }}>{i + 1}</div>
+                  </div>
+                  <h3 className="text-base font-bold text-gray-900 mb-2">{s.title}</h3>
+                  <p className="text-sm text-gray-500 leading-relaxed">{s.desc}</p>
+                </motion.div>
+              ))}
+            </div>
           </div>
         </div>
       </section>
