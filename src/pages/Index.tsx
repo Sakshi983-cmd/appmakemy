@@ -31,43 +31,46 @@ const NAV = [
 ];
 
 const SERVICES = [
-  { icon: Globe, title: "Web Development", desc: "Custom websites and web applications built with cutting-edge technologies.", color: "#7C3AED" },
-  { icon: Smartphone, title: "Mobile Apps", desc: "Native and cross-platform mobile apps designed for seamless performance.", color: "#F97316" },
-  { icon: Palette, title: "UI/UX Design", desc: "User-centered design that combines aesthetics with functionality.", color: "#7C3AED" },
-  { icon: ChartColumn, title: "CRM/ERP", desc: "Custom business solutions to streamline operations and workflows.", color: "#EA580C" },
-  { icon: Layers, title: "Branding", desc: "Strategic brand identity and design that helps you stand out.", color: "#7C3AED" },
+  { icon: Globe, title: "Web Development", desc: "Custom websites and web apps built with cutting-edge tech.", color: "#7C3AED", gradient: "from-violet-500 to-purple-700", emoji: "🌐", tags: ["Next.js", "React", "Node"] },
+  { icon: Smartphone, title: "Mobile Apps", desc: "Native & cross-platform apps with seamless performance.", color: "#F97316", gradient: "from-orange-500 to-rose-600", emoji: "📱", tags: ["iOS", "Android", "Flutter"] },
+  { icon: Palette, title: "UI/UX Design", desc: "User-centered design merging aesthetics with function.", color: "#EC4899", gradient: "from-pink-500 to-fuchsia-600", emoji: "🎨", tags: ["Figma", "Prototyping", "Research"] },
+  { icon: ChartColumn, title: "CRM / ERP", desc: "Custom business solutions to streamline operations.", color: "#0EA5E9", gradient: "from-sky-500 to-blue-700", emoji: "📊", tags: ["Dashboards", "Automation", "API"] },
+  { icon: Layers, title: "Branding", desc: "Strategic brand identity that makes you stand out.", color: "#10B981", gradient: "from-emerald-500 to-teal-700", emoji: "✨", tags: ["Logo", "Identity", "Guidelines"] },
 ];
 
 const FEATURED = [
   {
     title: "Qviq",
-    badge: "SaaS Platform",
+    badge: "qviq",
     badgeIcon: Globe,
     desc: "Create a website that reflects your personality and grows your brand quickly and easily.",
     image: "/project-qviq.jpg",
     url: "https://qviq.io/",
     accent: "#7C3AED",
     bg: "linear-gradient(135deg, #8B5CF6, #6D28D9)",
+    centerKind: "logo" as const,
   },
   {
     title: "DMA Associates",
-    badge: "Corporate Law",
+    badge: "dma associates",
     badgeIcon: Layers,
     desc: "Expertise in Corporate and Allied Laws, delivered by seasoned in-house professionals.",
     image: "/project-dma.jpg",
     url: "https://www.dmassociates.in/",
     accent: "#2563EB",
     bg: "linear-gradient(135deg, #3B82F6, #1D4ED8)",
+    centerKind: "logo" as const,
   },
   {
     title: "Inhunger",
-    badge: "Food Delivery",
+    badge: "inhunger.com",
     badgeIcon: Smartphone,
     desc: "Delivering fresh, chef-curated meals straight to your doorstep.",
     image: "/project-inhunger.jpg",
     url: "https://inhunger.com/",
     accent: "#EA580C",
-    bg: "linear-gradient(135deg, #FB923C, #DC2626)",
+    bg: "linear-gradient(135deg, #FFFFFF, #FFE4D6)",
+    centerKind: "wordmark" as const,
   },
 ];
 
@@ -470,12 +473,25 @@ const Index = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
             {SERVICES.map((s, i) => (
               <motion.div key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.07 }}
-                className="group rounded-2xl border border-gray-200 bg-white p-6 hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
-                <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-4" style={{ background: `${s.color}25` }}>
-                  <s.icon className="w-6 h-6" style={{ color: s.color }} />
+                className="group relative rounded-3xl border border-gray-200 bg-white p-6 hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 overflow-hidden">
+                {/* gradient orb bg */}
+                <div className={`absolute -top-16 -right-16 w-40 h-40 rounded-full bg-gradient-to-br ${s.gradient} opacity-10 group-hover:opacity-25 group-hover:scale-125 transition-all duration-700 blur-2xl`} />
+                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" style={{ backgroundImage: "radial-gradient(circle at 50% 0%, rgba(124,58,237,.06), transparent 60%)" }} />
+                {/* icon block */}
+                <div className={`relative w-16 h-16 rounded-2xl bg-gradient-to-br ${s.gradient} flex items-center justify-center mb-5 shadow-lg group-hover:scale-110 group-hover:rotate-6 transition-all duration-500`}>
+                  <s.icon className="w-7 h-7 text-white" strokeWidth={2.2} />
+                  <div className="absolute -top-2 -right-2 w-7 h-7 rounded-full bg-white shadow-md flex items-center justify-center text-base">{s.emoji}</div>
                 </div>
-                <h3 className="text-lg font-bold text-gray-900 mb-2">{s.title}</h3>
-                <p className="text-sm text-gray-500 leading-relaxed">{s.desc}</p>
+                <h3 className="relative text-lg font-bold text-gray-900 mb-2">{s.title}</h3>
+                <p className="relative text-sm text-gray-500 leading-relaxed mb-4">{s.desc}</p>
+                <div className="relative flex flex-wrap gap-1.5">
+                  {s.tags.map((t) => (
+                    <span key={t} className="text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full bg-gray-100 text-gray-600 group-hover:bg-white group-hover:shadow-sm transition-all">{t}</span>
+                  ))}
+                </div>
+                <div className="absolute bottom-3 right-4 opacity-0 group-hover:opacity-100 group-hover:translate-x-0 -translate-x-2 transition-all duration-300">
+                  <ArrowRight className="w-4 h-4" style={{ color: s.color }} />
+                </div>
               </motion.div>
             ))}
           </div>
@@ -520,18 +536,25 @@ const Index = () => {
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-gray-900 mb-4">Our Process</h2>
             <p className="text-gray-500 max-w-2xl mx-auto text-lg">A streamlined approach to high-quality delivery.</p>
           </div>
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-4 lg:gap-6">
-            {PROCESS.map((s, i) => (
-              <motion.div key={i} initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}
-                className="text-center bg-white rounded-2xl border border-gray-100 p-6 hover:shadow-xl transition-all">
-                <div className="relative w-16 h-16 mx-auto mb-4 rounded-2xl flex items-center justify-center" style={{ background: `${s.color}20` }}>
-                  <s.icon className="w-7 h-7" style={{ color: s.color }} />
-                </div>
-                <div className="inline-flex items-center justify-center w-7 h-7 rounded-full text-white text-xs font-bold mb-2" style={{ background: s.color }}>{i + 1}</div>
-                <h3 className="text-base font-bold text-gray-900 mb-2">{s.title}</h3>
-                <p className="text-sm text-gray-500 leading-relaxed">{s.desc}</p>
-              </motion.div>
-            ))}
+          <div className="relative">
+            {/* connector line */}
+            <div className="hidden md:block absolute top-12 left-[10%] right-[10%] h-0.5 bg-gradient-to-r from-violet-300 via-orange-300 to-rose-300 opacity-60" />
+            <div className="grid grid-cols-2 md:grid-cols-5 gap-4 lg:gap-6 relative">
+              {PROCESS.map((s, i) => (
+                <motion.div key={i} initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}
+                  className="group text-center relative">
+                  <div className="relative w-24 h-24 mx-auto mb-4">
+                    <div className="absolute inset-0 rounded-full blur-xl opacity-40 group-hover:opacity-70 transition-opacity" style={{ background: s.color }} />
+                    <div className="relative w-24 h-24 rounded-full flex items-center justify-center bg-white border-4 shadow-xl group-hover:scale-110 group-hover:-rotate-6 transition-all duration-500" style={{ borderColor: s.color }}>
+                      <s.icon className="w-9 h-9" style={{ color: s.color }} strokeWidth={2.2} />
+                    </div>
+                    <div className="absolute -top-1 -right-1 w-9 h-9 rounded-full text-white text-sm font-black flex items-center justify-center shadow-lg ring-4 ring-white" style={{ background: s.color }}>{i + 1}</div>
+                  </div>
+                  <h3 className="text-base font-bold text-gray-900 mb-2">{s.title}</h3>
+                  <p className="text-sm text-gray-500 leading-relaxed">{s.desc}</p>
+                </motion.div>
+              ))}
+            </div>
           </div>
         </div>
       </section>
@@ -561,15 +584,21 @@ const Index = () => {
                   <div className="absolute inset-y-0 -left-1/2 w-1/2 bg-gradient-to-r from-transparent via-white/30 to-transparent skew-x-12 group-hover:translate-x-[300%] transition-transform duration-1000" />
                   {/* Branded badge */}
                   <div className="absolute top-4 left-4 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/95 backdrop-blur-sm shadow-md">
-                    <p.badgeIcon className="w-3.5 h-3.5" style={{ color: p.accent }} />
-                    <span className="text-xs font-bold uppercase tracking-wider" style={{ color: p.accent }}>{p.badge}</span>
+                    <p.badgeIcon className="w-3.5 h-3.5" style={{ color: p.centerKind === "wordmark" ? "#000" : p.accent }} />
+                    <span className="text-xs font-bold uppercase tracking-wider" style={{ color: p.centerKind === "wordmark" ? "#000" : p.accent }}>{p.badge}</span>
                   </div>
                   <div className="absolute top-4 right-4 inline-flex items-center justify-center w-8 h-8 rounded-full bg-white/95 backdrop-blur-sm shadow-md group-hover:rotate-45 transition-transform">
-                    <ExternalLink className="w-4 h-4" style={{ color: p.accent }} />
+                    <ExternalLink className="w-4 h-4" style={{ color: p.centerKind === "wordmark" ? "#000" : p.accent }} />
                   </div>
-                  {/* Real brand logo */}
+                  {/* Center: real brand logo OR black wordmark */}
                   <div className="absolute inset-0 flex flex-col items-center justify-center gap-3">
-                    <BrandLogo url={p.url} title={p.title} size={108} />
+                    {p.centerKind === "wordmark" ? (
+                      <div className="text-3xl sm:text-4xl font-black tracking-tight text-black drop-shadow-sm">
+                        inhunger<span className="text-orange-500">.com</span>
+                      </div>
+                    ) : (
+                      <BrandLogo url={p.url} title={p.title} size={108} />
+                    )}
                   </div>
                 </div>
                 <div className="p-6">
@@ -597,34 +626,45 @@ const Index = () => {
         <div className="absolute bottom-10 left-[5%] w-48 h-48 morph-blob pointer-events-none" style={{ background: "linear-gradient(135deg, rgba(249,115,22,.05), rgba(124,58,237,.03))", animationDelay: "4s" }} />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
           <div className="text-center mb-10">
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-gray-900 mb-4">Our Projects</h2>
-            <p className="text-gray-500 max-w-2xl mx-auto text-lg">Explore our complete portfolio across industries and technologies.</p>
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-gradient-to-r from-violet-100 to-orange-100 border border-orange-200 text-orange-700 text-xs font-bold uppercase tracking-wider mb-4">
+              <Sparkles className="w-3.5 h-3.5" /> {PROJECTS.length}+ live projects
+            </div>
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-gray-900 mb-4">
+              Our <span className="gradient-text">Projects</span>
+            </h2>
+            <p className="text-gray-500 max-w-2xl mx-auto text-lg">A curated portfolio across industries — every tile is a real client we've launched.</p>
           </div>
           <div className="flex flex-wrap items-center justify-center gap-2 mb-10">
             <Filter className="w-4 h-4 text-gray-400 mr-1" />
-            {CATS.map((c) => (
-              <button key={c} onClick={() => setActiveCat(c)}
-                className={`relative px-5 py-2 rounded-full text-sm font-medium transition-all ${activeCat === c ? "text-white shadow-lg shadow-orange-500/25 bg-gradient-to-r from-orange-500 to-violet-500" : "bg-gray-100 text-gray-600 hover:bg-gray-200"}`}>
-                {c}
-              </button>
-            ))}
+            {CATS.map((c) => {
+              const count = c === "All" ? PROJECTS.length : PROJECTS.filter((p) => p.cat === c).length;
+              return (
+                <button key={c} onClick={() => setActiveCat(c)}
+                  className={`relative px-5 py-2 rounded-full text-sm font-semibold transition-all flex items-center gap-2 ${activeCat === c ? "text-white shadow-lg shadow-orange-500/30 bg-gradient-to-r from-orange-500 to-violet-500 scale-105" : "bg-gray-100 text-gray-600 hover:bg-gray-200"}`}>
+                  {c}
+                  <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded-full ${activeCat === c ? "bg-white/25" : "bg-white text-gray-500"}`}>{count}</span>
+                </button>
+              );
+            })}
           </div>
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 sm:gap-5">
             {filtered.map((p, i) => {
               const palette = paletteFor(p.title);
               const isLink = p.url && p.url !== "#";
               return (
                 <motion.a key={p.title + i} href={isLink ? p.url : undefined} target={isLink ? "_blank" : undefined} rel={isLink ? "noopener noreferrer" : undefined}
-                  initial={{ opacity: 0, scale: 0.92 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ delay: Math.min(i * 0.02, 0.4) }}
-                  className="group relative rounded-2xl overflow-hidden bg-white border border-gray-200 hover:border-transparent hover:shadow-xl hover:shadow-orange-500/10 hover:-translate-y-1 transition-all duration-300 cursor-pointer block">
+                  initial={{ opacity: 0, y: 20, scale: 0.95 }} whileInView={{ opacity: 1, y: 0, scale: 1 }} viewport={{ once: true }} transition={{ delay: Math.min(i * 0.02, 0.4) }}
+                  className="group relative rounded-2xl overflow-hidden bg-white border border-gray-200 hover:border-transparent hover:shadow-2xl hover:shadow-orange-500/15 hover:-translate-y-2 transition-all duration-500 cursor-pointer block">
+                  {/* gradient ring on hover */}
+                  <div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" style={{ background: `linear-gradient(135deg, ${palette.from}, ${palette.to})`, padding: 2, WebkitMask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)", WebkitMaskComposite: "xor", maskComposite: "exclude" }} />
                   <BrandTile title={p.title} tag={p.tag} palette={palette} url={p.url} />
-                  <div className="p-3">
-                    <h3 className="text-sm font-bold text-gray-900 truncate">{p.title}</h3>
-                    <div className="flex items-center justify-between mt-1">
-                      <span className="text-[10px] font-semibold uppercase tracking-wider" style={{ color: palette.from }}>{p.cat}</span>
-                      {isLink && <ExternalLink className="w-3 h-3 text-gray-400 group-hover:text-orange-500 transition-colors" />}
+                  <div className="p-3.5 relative">
+                    <h3 className="text-sm font-bold text-gray-900 truncate group-hover:text-orange-600 transition-colors">{p.title}</h3>
+                    <div className="flex items-center justify-between mt-1.5">
+                      <span className="text-[10px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded" style={{ color: palette.from, background: `${palette.from}12` }}>{p.cat}</span>
+                      {isLink && <ExternalLink className="w-3.5 h-3.5 text-gray-400 group-hover:text-orange-500 group-hover:rotate-12 transition-all" />}
                     </div>
-                    <p className="text-[11px] text-gray-500 mt-1 line-clamp-1">{p.desc}</p>
+                    <p className="text-[11px] text-gray-500 mt-1.5 line-clamp-1">{p.desc}</p>
                   </div>
                 </motion.a>
               );
