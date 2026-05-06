@@ -564,15 +564,21 @@ const Index = () => {
                   <div className="absolute inset-y-0 -left-1/2 w-1/2 bg-gradient-to-r from-transparent via-white/30 to-transparent skew-x-12 group-hover:translate-x-[300%] transition-transform duration-1000" />
                   {/* Branded badge */}
                   <div className="absolute top-4 left-4 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/95 backdrop-blur-sm shadow-md">
-                    <p.badgeIcon className="w-3.5 h-3.5" style={{ color: p.accent }} />
-                    <span className="text-xs font-bold uppercase tracking-wider" style={{ color: p.accent }}>{p.badge}</span>
+                    <p.badgeIcon className="w-3.5 h-3.5" style={{ color: p.centerKind === "wordmark" ? "#000" : p.accent }} />
+                    <span className="text-xs font-bold uppercase tracking-wider" style={{ color: p.centerKind === "wordmark" ? "#000" : p.accent }}>{p.badge}</span>
                   </div>
                   <div className="absolute top-4 right-4 inline-flex items-center justify-center w-8 h-8 rounded-full bg-white/95 backdrop-blur-sm shadow-md group-hover:rotate-45 transition-transform">
-                    <ExternalLink className="w-4 h-4" style={{ color: p.accent }} />
+                    <ExternalLink className="w-4 h-4" style={{ color: p.centerKind === "wordmark" ? "#000" : p.accent }} />
                   </div>
-                  {/* Real brand logo */}
+                  {/* Center: real brand logo OR black wordmark */}
                   <div className="absolute inset-0 flex flex-col items-center justify-center gap-3">
-                    <BrandLogo url={p.url} title={p.title} size={108} />
+                    {p.centerKind === "wordmark" ? (
+                      <div className="text-3xl sm:text-4xl font-black tracking-tight text-black drop-shadow-sm">
+                        inhunger<span className="text-orange-500">.com</span>
+                      </div>
+                    ) : (
+                      <BrandLogo url={p.url} title={p.title} size={108} />
+                    )}
                   </div>
                 </div>
                 <div className="p-6">
