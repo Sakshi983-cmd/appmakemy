@@ -626,34 +626,45 @@ const Index = () => {
         <div className="absolute bottom-10 left-[5%] w-48 h-48 morph-blob pointer-events-none" style={{ background: "linear-gradient(135deg, rgba(249,115,22,.05), rgba(124,58,237,.03))", animationDelay: "4s" }} />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
           <div className="text-center mb-10">
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-gray-900 mb-4">Our Projects</h2>
-            <p className="text-gray-500 max-w-2xl mx-auto text-lg">Explore our complete portfolio across industries and technologies.</p>
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-gradient-to-r from-violet-100 to-orange-100 border border-orange-200 text-orange-700 text-xs font-bold uppercase tracking-wider mb-4">
+              <Sparkles className="w-3.5 h-3.5" /> {PROJECTS.length}+ live projects
+            </div>
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-gray-900 mb-4">
+              Our <span className="gradient-text">Projects</span>
+            </h2>
+            <p className="text-gray-500 max-w-2xl mx-auto text-lg">A curated portfolio across industries — every tile is a real client we've launched.</p>
           </div>
           <div className="flex flex-wrap items-center justify-center gap-2 mb-10">
             <Filter className="w-4 h-4 text-gray-400 mr-1" />
-            {CATS.map((c) => (
-              <button key={c} onClick={() => setActiveCat(c)}
-                className={`relative px-5 py-2 rounded-full text-sm font-medium transition-all ${activeCat === c ? "text-white shadow-lg shadow-orange-500/25 bg-gradient-to-r from-orange-500 to-violet-500" : "bg-gray-100 text-gray-600 hover:bg-gray-200"}`}>
-                {c}
-              </button>
-            ))}
+            {CATS.map((c) => {
+              const count = c === "All" ? PROJECTS.length : PROJECTS.filter((p) => p.cat === c).length;
+              return (
+                <button key={c} onClick={() => setActiveCat(c)}
+                  className={`relative px-5 py-2 rounded-full text-sm font-semibold transition-all flex items-center gap-2 ${activeCat === c ? "text-white shadow-lg shadow-orange-500/30 bg-gradient-to-r from-orange-500 to-violet-500 scale-105" : "bg-gray-100 text-gray-600 hover:bg-gray-200"}`}>
+                  {c}
+                  <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded-full ${activeCat === c ? "bg-white/25" : "bg-white text-gray-500"}`}>{count}</span>
+                </button>
+              );
+            })}
           </div>
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 sm:gap-5">
             {filtered.map((p, i) => {
               const palette = paletteFor(p.title);
               const isLink = p.url && p.url !== "#";
               return (
                 <motion.a key={p.title + i} href={isLink ? p.url : undefined} target={isLink ? "_blank" : undefined} rel={isLink ? "noopener noreferrer" : undefined}
-                  initial={{ opacity: 0, scale: 0.92 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ delay: Math.min(i * 0.02, 0.4) }}
-                  className="group relative rounded-2xl overflow-hidden bg-white border border-gray-200 hover:border-transparent hover:shadow-xl hover:shadow-orange-500/10 hover:-translate-y-1 transition-all duration-300 cursor-pointer block">
+                  initial={{ opacity: 0, y: 20, scale: 0.95 }} whileInView={{ opacity: 1, y: 0, scale: 1 }} viewport={{ once: true }} transition={{ delay: Math.min(i * 0.02, 0.4) }}
+                  className="group relative rounded-2xl overflow-hidden bg-white border border-gray-200 hover:border-transparent hover:shadow-2xl hover:shadow-orange-500/15 hover:-translate-y-2 transition-all duration-500 cursor-pointer block">
+                  {/* gradient ring on hover */}
+                  <div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" style={{ background: `linear-gradient(135deg, ${palette.from}, ${palette.to})`, padding: 2, WebkitMask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)", WebkitMaskComposite: "xor", maskComposite: "exclude" }} />
                   <BrandTile title={p.title} tag={p.tag} palette={palette} url={p.url} />
-                  <div className="p-3">
-                    <h3 className="text-sm font-bold text-gray-900 truncate">{p.title}</h3>
-                    <div className="flex items-center justify-between mt-1">
-                      <span className="text-[10px] font-semibold uppercase tracking-wider" style={{ color: palette.from }}>{p.cat}</span>
-                      {isLink && <ExternalLink className="w-3 h-3 text-gray-400 group-hover:text-orange-500 transition-colors" />}
+                  <div className="p-3.5 relative">
+                    <h3 className="text-sm font-bold text-gray-900 truncate group-hover:text-orange-600 transition-colors">{p.title}</h3>
+                    <div className="flex items-center justify-between mt-1.5">
+                      <span className="text-[10px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded" style={{ color: palette.from, background: `${palette.from}12` }}>{p.cat}</span>
+                      {isLink && <ExternalLink className="w-3.5 h-3.5 text-gray-400 group-hover:text-orange-500 group-hover:rotate-12 transition-all" />}
                     </div>
-                    <p className="text-[11px] text-gray-500 mt-1 line-clamp-1">{p.desc}</p>
+                    <p className="text-[11px] text-gray-500 mt-1.5 line-clamp-1">{p.desc}</p>
                   </div>
                 </motion.a>
               );
