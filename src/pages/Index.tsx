@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Globe, Smartphone, Palette, Layers, ChartColumn, Sparkles, ArrowRight, ExternalLink,
@@ -280,10 +280,21 @@ function getDomain(url?: string) {
 function BrandLogo({ url, title, size = 48, rounded = true }: { url?: string; title: string; size?: number; rounded?: boolean }) {
   const domain = getDomain(url);
   const custom = domain ? CUSTOM_LOGOS[domain] : undefined;
-  const [stage, setStage] = useState<"primary" | "fallback" | "initials">(custom ? "primary" : domain ? "primary" : "initials");
+  // Build a fallback chain so smaller brands also get a logo
+  const sources = useMemo(() => {
+    if (custom) return [custom];
+    if (!domain) return [] as string[];
+    return [
+      `https://logo.clearbit.com/${domain}`,
+      `https://icons.duckduckgo.com/ip3/${domain}.ico`,
+      `https://www.google.com/s2/favicons?domain=${domain}&sz=256`,
+      `https://www.google.com/s2/favicons?domain=${domain}&sz=128`,
+    ];
+  }, [custom, domain]);
+  const [idx, setIdx] = useState(0);
   const initials = title.split(" ").slice(0, 2).map((w) => w[0]).join("").toUpperCase();
 
-  if (stage === "initials" || (!custom && !domain)) {
+  if (sources.length === 0 || idx >= sources.length) {
     return (
       <div className={`flex items-center justify-center bg-white shadow-lg ${rounded ? "rounded-2xl" : ""}`}
         style={{ width: size, height: size }}>
@@ -294,20 +305,14 @@ function BrandLogo({ url, title, size = 48, rounded = true }: { url?: string; ti
     );
   }
 
-  const src = custom
-    ? custom
-    : stage === "primary"
-      ? `https://logo.clearbit.com/${domain}`
-      : `https://www.google.com/s2/favicons?domain=${domain}&sz=128`;
-
   return (
     <div className={`bg-white shadow-lg flex items-center justify-center overflow-hidden p-2 ${rounded ? "rounded-2xl" : ""}`}
       style={{ width: size, height: size }}>
       <img
-        src={src}
+        src={sources[idx]}
         alt={`${title} logo`}
         loading="lazy"
-        onError={() => setStage((s) => (custom ? "initials" : s === "primary" ? "fallback" : "initials"))}
+        onError={() => setIdx((i) => i + 1)}
         className="w-full h-full object-contain"
       />
     </div>
