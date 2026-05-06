@@ -549,27 +549,34 @@ const Index = () => {
             {FEATURED.map((p, i) => (
               <motion.a key={i} href={p.url} target="_blank" rel="noopener noreferrer"
                 initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.15 }}
-                className="group relative rounded-2xl overflow-hidden border border-gray-200 bg-white hover:shadow-2xl hover:-translate-y-1 transition-all duration-500">
-                <div className="relative h-56 overflow-hidden" style={{ background: p.bg }}>
-                  <div className="absolute inset-0 opacity-30 mix-blend-overlay">
+                className="group relative rounded-3xl overflow-hidden border border-gray-200 bg-white hover:shadow-2xl hover:-translate-y-2 transition-all duration-500">
+                <div className="relative h-64 overflow-hidden" style={{ background: p.bg }}>
+                  <div className="absolute inset-0 opacity-25 mix-blend-overlay">
                     <img src={p.image} alt={p.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
                   </div>
-                  <div className="absolute inset-0 opacity-[0.18]" style={{ backgroundImage: "radial-gradient(rgba(255,255,255,.7) 1px, transparent 1px)", backgroundSize: "16px 16px" }} />
+                  <div className="absolute inset-0 opacity-[0.18]" style={{ backgroundImage: "linear-gradient(rgba(255,255,255,.4) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.4) 1px, transparent 1px)", backgroundSize: "26px 26px" }} />
+                  <div className="absolute -right-8 -bottom-10 w-40 h-40 rounded-full bg-white/15 blur-3xl" />
+                  <div className="absolute -left-8 -top-10 w-36 h-36 rounded-full bg-black/15 blur-3xl" />
+                  {/* shine */}
+                  <div className="absolute inset-y-0 -left-1/2 w-1/2 bg-gradient-to-r from-transparent via-white/30 to-transparent skew-x-12 group-hover:translate-x-[300%] transition-transform duration-1000" />
                   {/* Branded badge */}
-                  <div className="absolute top-4 left-4 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/95 backdrop-blur-sm shadow-sm">
+                  <div className="absolute top-4 left-4 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/95 backdrop-blur-sm shadow-md">
                     <p.badgeIcon className="w-3.5 h-3.5" style={{ color: p.accent }} />
                     <span className="text-xs font-bold uppercase tracking-wider" style={{ color: p.accent }}>{p.badge}</span>
                   </div>
+                  <div className="absolute top-4 right-4 inline-flex items-center justify-center w-8 h-8 rounded-full bg-white/95 backdrop-blur-sm shadow-md group-hover:rotate-45 transition-transform">
+                    <ExternalLink className="w-4 h-4" style={{ color: p.accent }} />
+                  </div>
                   {/* Real brand logo */}
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <BrandLogo url={p.url} title={p.title} size={96} />
+                  <div className="absolute inset-0 flex flex-col items-center justify-center gap-3">
+                    <BrandLogo url={p.url} title={p.title} size={108} />
                   </div>
                 </div>
-                <div className="p-5">
+                <div className="p-6">
                   <h3 className="text-xl font-bold text-gray-900 mb-2">{p.title}</h3>
-                  <p className="text-sm text-gray-500 leading-relaxed mb-3">{p.desc}</p>
+                  <p className="text-sm text-gray-500 leading-relaxed mb-4">{p.desc}</p>
                   <div className="flex items-center gap-1 text-sm font-semibold group-hover:gap-2 transition-all" style={{ color: p.accent }}>
-                    Visit <ExternalLink className="w-4 h-4" />
+                    Visit live site <ArrowRight className="w-4 h-4" />
                   </div>
                 </div>
               </motion.a>
