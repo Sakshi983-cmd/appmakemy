@@ -31,11 +31,11 @@ const NAV = [
 ];
 
 const SERVICES = [
-  { icon: Globe, title: "Web Development", desc: "Custom websites and web applications built with cutting-edge technologies.", color: "#7C3AED" },
-  { icon: Smartphone, title: "Mobile Apps", desc: "Native and cross-platform mobile apps designed for seamless performance.", color: "#F97316" },
-  { icon: Palette, title: "UI/UX Design", desc: "User-centered design that combines aesthetics with functionality.", color: "#7C3AED" },
-  { icon: ChartColumn, title: "CRM/ERP", desc: "Custom business solutions to streamline operations and workflows.", color: "#EA580C" },
-  { icon: Layers, title: "Branding", desc: "Strategic brand identity and design that helps you stand out.", color: "#7C3AED" },
+  { icon: Globe, title: "Web Development", desc: "Custom websites and web apps built with cutting-edge tech.", color: "#7C3AED", gradient: "from-violet-500 to-purple-700", emoji: "🌐", tags: ["Next.js", "React", "Node"] },
+  { icon: Smartphone, title: "Mobile Apps", desc: "Native & cross-platform apps with seamless performance.", color: "#F97316", gradient: "from-orange-500 to-rose-600", emoji: "📱", tags: ["iOS", "Android", "Flutter"] },
+  { icon: Palette, title: "UI/UX Design", desc: "User-centered design merging aesthetics with function.", color: "#EC4899", gradient: "from-pink-500 to-fuchsia-600", emoji: "🎨", tags: ["Figma", "Prototyping", "Research"] },
+  { icon: ChartColumn, title: "CRM / ERP", desc: "Custom business solutions to streamline operations.", color: "#0EA5E9", gradient: "from-sky-500 to-blue-700", emoji: "📊", tags: ["Dashboards", "Automation", "API"] },
+  { icon: Layers, title: "Branding", desc: "Strategic brand identity that makes you stand out.", color: "#10B981", gradient: "from-emerald-500 to-teal-700", emoji: "✨", tags: ["Logo", "Identity", "Guidelines"] },
 ];
 
 const FEATURED = [
