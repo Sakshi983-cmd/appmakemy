@@ -281,7 +281,7 @@ function BrandLogo({ url, title, size = 48, rounded = true }: { url?: string; ti
   const domain = getDomain(url);
   const custom = domain ? CUSTOM_LOGOS[domain] : undefined;
   // Build a fallback chain so smaller brands also get a logo
-  const sources = React.useMemo(() => {
+  const sources = useMemo(() => {
     if (custom) return [custom];
     if (!domain) return [] as string[];
     return [
