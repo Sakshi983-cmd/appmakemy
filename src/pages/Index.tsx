@@ -371,6 +371,10 @@ const Index = () => {
                 {l.label}
               </button>
             ))}
+            <Link to="/ai-news"
+              className="ml-1 px-3 py-2 text-sm font-semibold text-white rounded-full bg-gradient-to-r from-violet-600 to-orange-500 hover:opacity-90 transition-opacity inline-flex items-center gap-1.5 shadow-md shadow-orange-500/20">
+              <Sparkles className="w-3.5 h-3.5" /> AI News
+            </Link>
           </nav>
           <div className="flex items-center gap-2">
             <button onClick={() => setChatOpen(true)}
