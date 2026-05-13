@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useMemo } from "react";
+import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Globe, Smartphone, Palette, Layers, ChartColumn, Sparkles, ArrowRight, ExternalLink,
@@ -370,6 +371,10 @@ const Index = () => {
                 {l.label}
               </button>
             ))}
+            <Link to="/ai-news"
+              className="ml-1 px-3 py-2 text-sm font-semibold text-white rounded-full bg-gradient-to-r from-violet-600 to-orange-500 hover:opacity-90 transition-opacity inline-flex items-center gap-1.5 shadow-md shadow-orange-500/20">
+              <Sparkles className="w-3.5 h-3.5" /> AI News
+            </Link>
           </nav>
           <div className="flex items-center gap-2">
             <button onClick={() => setChatOpen(true)}
@@ -392,6 +397,10 @@ const Index = () => {
                       {l.label}
                     </button>
                   ))}
+                  <Link to="/ai-news" onClick={() => setMenuOpen(false)}
+                    className="px-4 py-3 text-left text-sm font-semibold text-white rounded-lg bg-gradient-to-r from-violet-600 to-orange-500 inline-flex items-center gap-2">
+                    <Sparkles className="w-4 h-4" /> AI News
+                  </Link>
                   <Button onClick={openCalendly} className="mt-4 w-full rounded-full bg-orange-500 hover:bg-orange-600 text-white">Book a Call</Button>
                 </div>
               </SheetContent>
