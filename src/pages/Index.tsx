@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useMemo } from "react";
+import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Globe, Smartphone, Palette, Layers, ChartColumn, Sparkles, ArrowRight, ExternalLink,
