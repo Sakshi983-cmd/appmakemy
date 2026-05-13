@@ -397,6 +397,10 @@ const Index = () => {
                       {l.label}
                     </button>
                   ))}
+                  <Link to="/ai-news" onClick={() => setMenuOpen(false)}
+                    className="px-4 py-3 text-left text-sm font-semibold text-white rounded-lg bg-gradient-to-r from-violet-600 to-orange-500 inline-flex items-center gap-2">
+                    <Sparkles className="w-4 h-4" /> AI News
+                  </Link>
                   <Button onClick={openCalendly} className="mt-4 w-full rounded-full bg-orange-500 hover:bg-orange-600 text-white">Book a Call</Button>
                 </div>
               </SheetContent>
