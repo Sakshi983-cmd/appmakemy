@@ -18,7 +18,7 @@ const FALLBACK: NewsPost[] = [
     id: "fb-1",
     title: "OpenAI Releases GPT-5 With Major Reasoning Upgrades",
     excerpt: "The new model improves multi-step reasoning, longer context handling, and more reliable tool use for complex workflows.",
-    image_url: "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800",
+    image_url: null,
     category: "AI Research",
     published_date: new Date(Date.now() - 2 * 3600 * 1000).toISOString(),
     url: "https://openai.com/blog",
@@ -27,7 +27,7 @@ const FALLBACK: NewsPost[] = [
     id: "fb-2",
     title: "Google's Gemini 3.1 Pro Sets New Multimodal Benchmarks",
     excerpt: "Gemini 3.1 Pro leads recent evaluation charts on scientific reasoning and multimodal understanding tasks.",
-    image_url: "https://images.unsplash.com/photo-1573804633927-bfcbcd909acd?w=800",
+    image_url: null,
     category: "Industry News",
     published_date: new Date(Date.now() - 5 * 3600 * 1000).toISOString(),
     url: "https://deepmind.google/discover/blog",
@@ -36,7 +36,7 @@ const FALLBACK: NewsPost[] = [
     id: "fb-3",
     title: "Microsoft Expands Copilot Across Office and Windows",
     excerpt: "Copilot is now deeply integrated into Word, Excel, PowerPoint, Outlook, and the Windows shell for enterprise users.",
-    image_url: "https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=800",
+    image_url: null,
     category: "AI Tools",
     published_date: new Date(Date.now() - 26 * 3600 * 1000).toISOString(),
     url: "https://blogs.microsoft.com",
@@ -45,7 +45,7 @@ const FALLBACK: NewsPost[] = [
     id: "fb-4",
     title: "AI Model Detects Cancer With 96% Accuracy in Trials",
     excerpt: "New clinical results show an AI system outperforming expert radiologists in early cancer detection.",
-    image_url: "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=800",
+    image_url: null,
     category: "Healthcare AI",
     published_date: new Date(Date.now() - 2 * 86400 * 1000).toISOString(),
     url: "https://www.nature.com",
@@ -54,14 +54,31 @@ const FALLBACK: NewsPost[] = [
     id: "fb-5",
     title: "EU Rolls Out Landmark AI Regulation Framework",
     excerpt: "The new rules introduce strict transparency and risk categorization requirements for high-impact AI systems.",
-    image_url: "https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=800",
+    image_url: null,
     category: "Policy",
     published_date: new Date(Date.now() - 3 * 86400 * 1000).toISOString(),
     url: "https://europa.eu",
   },
 ];
 
-const FALLBACK_IMG = "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800";
+const DEFAULT_AI_IMG = "https://images.unsplash.com/photo-1677442136019-21780ecad995";
+
+const NEUTRAL_PLACEHOLDER = `data:image/svg+xml;base64,${btoa(
+  `<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 400 300"><rect width="400" height="300" fill="#f3f4f6"/><g transform="translate(175,115)"><rect x="0" y="0" width="50" height="40" rx="3" fill="none" stroke="#d1d5db" stroke-width="3"/><line x1="8" y1="10" x2="42" y2="10" stroke="#d1d5db" stroke-width="2.5"/><line x1="8" y1="20" x2="42" y2="20" stroke="#d1d5db" stroke-width="2.5"/><line x1="8" y1="30" x2="30" y2="30" stroke="#d1d5db" stroke-width="2.5"/><rect x="32" y="28" width="14" height="16" rx="1.5" fill="#d1d5db"/></g></svg>`
+)}`;
+
+const GENERIC_CATEGORIES = new Set([
+  "AI Research",
+  "Industry News",
+  "AI Tools",
+  "Tutorials",
+  "Policy",
+  "Healthcare AI",
+]);
+
+function isRealCategory(category: string | null | undefined): boolean {
+  return !!category && !GENERIC_CATEGORIES.has(category);
+}
 
 function badgeClassForCategory(category: string) {
   const map: Record<string, string> = {
@@ -93,6 +110,12 @@ function linkFor(post: NewsPost): { href: string; external: boolean } {
   if (post.url) return { href: post.url, external: true };
   if (post.slug) return { href: `/ai-news/${post.slug}`, external: false };
   return { href: "/ai-news", external: false };
+}
+
+function validImageUrl(url: string | null | undefined): string {
+  if (!url) return NEUTRAL_PLACEHOLDER;
+  if (url.includes(DEFAULT_AI_IMG)) return NEUTRAL_PLACEHOLDER;
+  return url;
 }
 
 function CardSkeleton() {
@@ -135,8 +158,7 @@ export default function LatestAINews() {
   }, []);
 
   const handleImgError = (e: React.SyntheticEvent<HTMLImageElement>) => {
-    const img = e.currentTarget;
-    if (img.src !== FALLBACK_IMG) img.src = FALLBACK_IMG;
+    e.currentTarget.src = NEUTRAL_PLACEHOLDER;
   };
 
   return (
@@ -168,16 +190,18 @@ export default function LatestAINews() {
                     className="news-card min-w-[85%] sm:min-w-[280px] md:w-[calc(20%-13px)] md:min-w-0 bg-white/90 backdrop-blur border border-gray-200 rounded-xl shadow-sm hover:-translate-y-1 hover:shadow-lg transition-all duration-300 ease-out snap-start flex-shrink-0 overflow-hidden flex flex-col"
                   >
                     <img
-                      src={post.image_url ?? FALLBACK_IMG}
+                      src={validImageUrl(post.image_url)}
                       alt={post.title}
                       loading="lazy"
                       onError={handleImgError}
-                      className="w-full h-48 object-cover"
+                      className="w-full h-48 object-cover rounded-t-xl"
                     />
                     <div className="p-4 flex flex-col flex-1">
                       <div className="flex items-center justify-between text-xs text-gray-500 mb-2">
-                        <span className={badgeClassForCategory(post.category)}>{post.category}</span>
-                        <span>{relativeTime(post.published_date)}</span>
+                        {isRealCategory(post.category) && (
+                          <span className={badgeClassForCategory(post.category)}>{post.category}</span>
+                        )}
+                        <span className="ml-auto">{relativeTime(post.published_date)}</span>
                       </div>
                       <h3 className="font-semibold text-sm md:text-base text-gray-900 line-clamp-2">{post.title}</h3>
                       <p className="mt-2 text-xs md:text-sm text-gray-500 line-clamp-2">{post.excerpt}</p>
@@ -210,8 +234,10 @@ export default function LatestAINews() {
                     className="bg-white/80 border border-gray-200 rounded-xl p-4 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300"
                   >
                     <div className="flex items-center justify-between text-xs text-gray-500 mb-2">
-                      <span className={badgeClassForCategory(post.category)}>{post.category}</span>
-                      <span>{relativeTime(post.published_date)}</span>
+                      {isRealCategory(post.category) && (
+                        <span className={badgeClassForCategory(post.category)}>{post.category}</span>
+                      )}
+                      <span className="ml-auto">{relativeTime(post.published_date)}</span>
                     </div>
                     <h4 className="font-semibold text-sm text-gray-900 line-clamp-2">{post.title}</h4>
                     <p className="mt-2 text-xs text-gray-500 line-clamp-2">{post.excerpt}</p>
