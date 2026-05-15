@@ -11,6 +11,7 @@ import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from "@/co
 import { supabase } from "@/integrations/supabase/client";
 import qviqLogo from "@/assets/qviq-logo.png";
 import dmaLogo from "@/assets/dma-logo.png";
+import LatestAINews from "@/components/LatestAINews";
 
 const CUSTOM_LOGOS: Record<string, string> = {
   "qviq.io": qviqLogo,
