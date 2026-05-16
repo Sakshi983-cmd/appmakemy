@@ -171,15 +171,6 @@ function NewsCard({ post, variant = "featured" }: NewsCardProps) {
         {/* Gradient overlay */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent pointer-events-none" />
 
-        {/* Category badge top-left */}
-        {post.category && (
-          <span
-            className={`absolute top-3 left-3 ${badgeColor(post.category)} text-white text-[10px] md:text-xs font-bold uppercase tracking-wide px-2.5 py-1 rounded-md shadow-md`}
-          >
-            {post.category}
-          </span>
-        )}
-
         {/* Timestamp + favicon bottom-right */}
         <div className="absolute bottom-2 right-3 flex items-center gap-1.5 text-white text-[11px] font-medium drop-shadow">
           {favicon && (
