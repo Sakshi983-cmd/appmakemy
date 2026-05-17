@@ -833,6 +833,9 @@ const Index = () => {
         </div>
       </section>
 
+      {/* Instagram Reels (3x3) */}
+      <InstagramReels />
+
       {/* Footer */}
       <footer className="bg-white text-gray-600 pt-12 pb-8 relative border-t border-gray-100">
         <div className="absolute top-0 left-0 right-0 h-[2px] footer-gradient-border" />
