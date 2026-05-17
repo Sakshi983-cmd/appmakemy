@@ -1,5 +1,5 @@
-import { useEffect, useRef } from "react";
-import { Instagram } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { Instagram, ChevronLeft, ChevronRight } from "lucide-react";
 import {
   INSTAGRAM_PROFILE_URL,
   INSTAGRAM_HANDLE,
@@ -10,18 +10,6 @@ import {
 function toEmbedUrl(url: string): string {
   const cleaned = url.split("?")[0].replace(/\/$/, "");
   return `${cleaned}/embed`;
-}
-
-function PlaceholderTile({ index }: { index: number }) {
-  return (
-    <div className="aspect-[9/16] rounded-xl bg-gradient-to-br from-violet-100 via-pink-50 to-orange-100 border border-gray-200 flex flex-col items-center justify-center text-center p-4">
-      <Instagram className="w-7 h-7 text-pink-500 mb-2" />
-      <p className="text-xs font-semibold text-gray-600">Reel slot {index + 1}</p>
-      <p className="text-[10px] text-gray-400 mt-1">
-        Add a URL in <code>src/config/instagramReels.ts</code>
-      </p>
-    </div>
-  );
 }
 
 function WidgetEmbed({ html }: { html: string }) {
@@ -42,9 +30,30 @@ function WidgetEmbed({ html }: { html: string }) {
 
 export default function InstagramReels() {
   const hasWidget = WIDGET_EMBED_HTML.trim().length > 0;
-  // Sirf 3 reels dikhao (3 column grid)
-  const reels = REEL_URLS.slice(0, 3);
-  const tiles = Array.from({ length: 3 }, (_, i) => reels[i]);
+  const reels = REEL_URLS.slice(0, 9).filter(Boolean);
+  const [current, setCurrent] = useState(0);
+
+  // Auto-slide every 5 seconds
+  useEffect(() => {
+    if (reels.length <= 1) return;
+    const timer = setInterval(() => {
+      setCurrent((prev) => (prev + 1) % reels.length);
+    }, 5000);
+    return () => clearInterval(timer);
+  }, [reels.length]);
+
+  const prev = () => setCurrent((c) => (c - 1 + reels.length) % reels.length);
+  const next = () => setCurrent((c) => (c + 1) % reels.length);
+
+  if (hasWidget) {
+    return (
+      <section id="reels" className="py-16 sm:py-24 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <WidgetEmbed html={WIDGET_EMBED_HTML} />
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section id="reels" className="py-16 sm:py-24 bg-white">
@@ -61,28 +70,60 @@ export default function InstagramReels() {
           </p>
         </div>
 
-        {hasWidget ? (
-          <WidgetEmbed html={WIDGET_EMBED_HTML} />
+        {reels.length === 0 ? (
+          <div className="flex justify-center">
+            <div className="w-[280px] aspect-[9/16] rounded-2xl bg-gradient-to-br from-violet-100 via-pink-50 to-orange-100 border border-gray-200 flex flex-col items-center justify-center text-center p-6">
+              <Instagram className="w-10 h-10 text-pink-400 mb-3" />
+              <p className="text-sm font-semibold text-gray-600">Reels coming soon!</p>
+              <p className="text-xs text-gray-400 mt-1">Add URLs in instagramReels.ts</p>
+            </div>
+          </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-6 max-w-4xl mx-auto">
-            {tiles.map((url, i) =>
-              url ? (
-                <div
-                  key={i}
-                  className="aspect-[9/16] rounded-xl overflow-hidden border border-gray-200 bg-black hover:shadow-xl transition-shadow"
+          <div className="flex flex-col items-center gap-6">
+            <div className="relative flex items-center justify-center w-full">
+              {reels.length > 1 && (
+                <button
+                  onClick={prev}
+                  className="absolute left-0 sm:left-4 z-10 w-10 h-10 rounded-full bg-white border border-gray-200 shadow-md flex items-center justify-center hover:bg-pink-50 transition-colors"
                 >
-                  <iframe
-                    src={toEmbedUrl(url)}
-                    title={`Instagram reel ${i + 1}`}
-                    loading="lazy"
-                    allow="encrypted-media"
-                    allowFullScreen
-                    className="w-full h-full"
+                  <ChevronLeft className="w-5 h-5 text-gray-600" />
+                </button>
+              )}
+
+              <div className="w-[260px] sm:w-[300px] aspect-[9/16] rounded-2xl overflow-hidden border border-gray-200 bg-black shadow-2xl">
+                <iframe
+                  key={current}
+                  src={toEmbedUrl(reels[current])}
+                  title={`Instagram reel ${current + 1}`}
+                  loading="lazy"
+                  allow="encrypted-media; autoplay"
+                  allowFullScreen
+                  className="w-full h-full"
+                />
+              </div>
+
+              {reels.length > 1 && (
+                <button
+                  onClick={next}
+                  className="absolute right-0 sm:right-4 z-10 w-10 h-10 rounded-full bg-white border border-gray-200 shadow-md flex items-center justify-center hover:bg-pink-50 transition-colors"
+                >
+                  <ChevronRight className="w-5 h-5 text-gray-600" />
+                </button>
+              )}
+            </div>
+
+            {reels.length > 1 && (
+              <div className="flex gap-2">
+                {reels.map((_, i) => (
+                  <button
+                    key={i}
+                    onClick={() => setCurrent(i)}
+                    className={`h-2 rounded-full transition-all ${
+                      i === current ? "w-6 bg-pink-500" : "w-2 bg-gray-300"
+                    }`}
                   />
-                </div>
-              ) : (
-                <PlaceholderTile key={i} index={i} />
-              )
+                ))}
+              </div>
             )}
           </div>
         )}
