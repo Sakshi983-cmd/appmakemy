@@ -30,11 +30,4 @@ export const WIDGET_EMBED_HTML = ``;
 export const REEL_URLS: string[] = [
   // "https://www.instagram.com/reel/REEL_ID_1/",
   // "https://www.instagram.com/reel/REEL_ID_2/",
-  // "https://www.instagram.com/reel/REEL_ID_3/",
-  // "https://www.instagram.com/reel/REEL_ID_4/",
-  // "https://www.instagram.com/reel/REEL_ID_5/",
-  // "https://www.instagram.com/reel/REEL_ID_6/",
-  // "https://www.instagram.com/reel/REEL_ID_7/",
-  // "https://www.instagram.com/reel/REEL_ID_8/",
-  // "https://www.instagram.com/reel/REEL_ID_9/",
 ];
