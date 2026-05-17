@@ -17,19 +17,16 @@ const IMG_QUERIES = [
 ];
 
 async function generateBlogIdeas(): Promise<Array<{title: string; category: string; topic: string}>> {
-  const prompt = `Generate exactly 6 diverse, current AI industry blog post ideas for ${new Date().toDateString()}. 
+  const prompt = `Generate exactly 5 diverse, fresh, REAL-WORLD tech & business news story ideas for ${new Date().toDateString()}.
 Mix of: AI Research, Industry News, AI Tools, Tutorials.
+Topics should feel like real headlines a person would see today — new model launches, real company moves, funding rounds, product updates, regulation news.
 Return ONLY a JSON array (no markdown) like:
-[{"title":"...","category":"AI Research|Industry News|AI Tools|Tutorials","topic":"brief topic for content generation"}]
-Topics should feel fresh — new model launches, research breakthroughs, practical AI tools, or how-to tutorials.`;
+[{"title":"...","category":"AI Research|Industry News|AI Tools|Tutorials","topic":"brief one-line angle"}]`;
 
   const r = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
     method: 'POST',
     headers: { Authorization: `Bearer ${LOVABLE_API_KEY}`, 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      model: 'google/gemini-2.5-flash',
-      messages: [{ role: 'user', content: prompt }],
-    }),
+    body: JSON.stringify({ model: 'google/gemini-2.5-flash', messages: [{ role: 'user', content: prompt }] }),
   });
   if (!r.ok) throw new Error(`ideas: ${r.status} ${await r.text()}`);
   const j = await r.json();
@@ -39,23 +36,27 @@ Topics should feel fresh — new model launches, research breakthroughs, practic
 }
 
 async function generateArticle(title: string, category: string, topic: string) {
-  const prompt = `Write a premium tech blog article in TechCrunch style.
+  const prompt = `Write a news article for a general, NON-TECHNICAL audience.
 Title: "${title}"
 Category: ${category}
 Topic: ${topic}
 
+STRICT STYLE RULES:
+- Use plain, simple, conversational English. No jargon. No buzzwords.
+- Explain like you're talking to a friend who knows nothing about tech.
+- Short sentences. Short paragraphs (2-3 sentences each).
+- Avoid words like "leverage", "synergy", "paradigm", "ecosystem", "robust", "seamless".
+- If you must use a technical term, immediately explain it in brackets.
+
 Return JSON only (no markdown fences):
 {
-  "excerpt": "1-2 sentence hook (max 200 chars)",
-  "content": "Full article in markdown — use ## H2 headings, paragraphs, bullet lists, and at least one > blockquote. 600-900 words. Include concrete details and a forward-looking conclusion."
+  "excerpt": "1 punchy sentence (max 160 chars) a normal person can understand instantly",
+  "content": "Full article in markdown, 400-600 words. Use ## H2 headings. Keep it friendly, clear, easy to read."
 }`;
   const r = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
     method: 'POST',
     headers: { Authorization: `Bearer ${LOVABLE_API_KEY}`, 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      model: 'google/gemini-2.5-flash',
-      messages: [{ role: 'user', content: prompt }],
-    }),
+    body: JSON.stringify({ model: 'google/gemini-2.5-flash', messages: [{ role: 'user', content: prompt }] }),
   });
   if (!r.ok) throw new Error(`article: ${r.status} ${await r.text()}`);
   const j = await r.json();
