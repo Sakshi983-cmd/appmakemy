@@ -72,7 +72,7 @@ Deno.serve(async (req) => {
     const ideas = await generateBlogIdeas();
     const inserted: any[] = [];
 
-    for (const idea of ideas.slice(0, 6)) {
+    for (const idea of ideas.slice(0, 5)) {
       try {
         const cat = CATEGORIES.includes(idea.category) ? idea.category : 'Industry News';
         const article = await generateArticle(idea.title, cat, idea.topic);
