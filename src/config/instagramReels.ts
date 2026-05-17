@@ -21,13 +21,11 @@
  */
 
 export const INSTAGRAM_PROFILE_URL = "https://instagram.com/makemyapp.co";
-export const INSTAGRAM_HANDLE = "@makemyapp";
+export const INSTAGRAM_HANDLE = "@makemyapp.co";
 
-// OPTION A — paste full widget embed HTML here (overrides REEL_URLS when set)
 export const WIDGET_EMBED_HTML = ``;
 
-// OPTION B — up to 9 reel/post URLs (fills the 3x3 grid)
 export const REEL_URLS: string[] = [
-  // "https://www.instagram.com/reel/REEL_ID_1/",
-  // "https://www.instagram.com/reel/REEL_ID_2/",
+  "https://www.instagram.com/reel/DRXGWXtgYZz/",
+  "https://www.instagram.com/reel/DSCjKjBgW4U/",
 ];
