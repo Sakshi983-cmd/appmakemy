@@ -51,7 +51,7 @@ function makeReadable(text: string): string {
   return first.length > 120 ? first.slice(0, 117) + "..." : first + ".";
 }
 
-const CORS_PROXYconst CORS_PROXY = "https://corsproxy.io/?";
+const CORS_PROXY = "https://corsproxy.io/?";
 
 // ── Parse a single RSS feed ───────────────────────────────────────────────────
 async function parseRSS(feedUrl: string, category: string): Promise<NewsPost[]> {
