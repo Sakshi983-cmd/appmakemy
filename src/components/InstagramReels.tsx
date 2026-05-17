@@ -8,29 +8,28 @@ import {
 } from "@/config/instagramReels";
 
 function toEmbedUrl(url: string): string {
-  // Convert any /reel/ID or /p/ID URL to its embed form
   const cleaned = url.split("?")[0].replace(/\/$/, "");
   return `${cleaned}/embed`;
 }
 
 function PlaceholderTile({ index }: { index: number }) {
   return (
-    <div className="aspect-square rounded-xl bg-gradient-to-br from-violet-100 via-pink-50 to-orange-100 border border-gray-200 flex flex-col items-center justify-center text-center p-4">
+    <div className="aspect-[9/16] rounded-xl bg-gradient-to-br from-violet-100 via-pink-50 to-orange-100 border border-gray-200 flex flex-col items-center justify-center text-center p-4">
       <Instagram className="w-7 h-7 text-pink-500 mb-2" />
       <p className="text-xs font-semibold text-gray-600">Reel slot {index + 1}</p>
-      <p className="text-[10px] text-gray-400 mt-1">Add a URL in <code>src/config/instagramReels.ts</code></p>
+      <p className="text-[10px] text-gray-400 mt-1">
+        Add a URL in <code>src/config/instagramReels.ts</code>
+      </p>
     </div>
   );
 }
 
 function WidgetEmbed({ html }: { html: string }) {
   const ref = useRef<HTMLDivElement>(null);
-
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
     el.innerHTML = html;
-    // Re-execute any <script> tags inside the pasted embed
     el.querySelectorAll("script").forEach((oldScript) => {
       const s = document.createElement("script");
       for (const attr of Array.from(oldScript.attributes)) s.setAttribute(attr.name, attr.value);
@@ -38,14 +37,14 @@ function WidgetEmbed({ html }: { html: string }) {
       oldScript.replaceWith(s);
     });
   }, [html]);
-
   return <div ref={ref} className="w-full" />;
 }
 
 export default function InstagramReels() {
   const hasWidget = WIDGET_EMBED_HTML.trim().length > 0;
-  const reels = REEL_URLS.slice(0, 9);
-  const tiles = Array.from({ length: 9 }, (_, i) => reels[i]);
+  // Sirf 3 reels dikhao (3 column grid)
+  const reels = REEL_URLS.slice(0, 3);
+  const tiles = Array.from({ length: 3 }, (_, i) => reels[i]);
 
   return (
     <section id="reels" className="py-16 sm:py-24 bg-white">
@@ -65,12 +64,12 @@ export default function InstagramReels() {
         {hasWidget ? (
           <WidgetEmbed html={WIDGET_EMBED_HTML} />
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 md:gap-5">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-6 max-w-4xl mx-auto">
             {tiles.map((url, i) =>
               url ? (
                 <div
                   key={i}
-                  className="aspect-square rounded-xl overflow-hidden border border-gray-200 bg-black hover:shadow-xl transition-shadow"
+                  className="aspect-[9/16] rounded-xl overflow-hidden border border-gray-200 bg-black hover:shadow-xl transition-shadow"
                 >
                   <iframe
                     src={toEmbedUrl(url)}
@@ -83,7 +82,7 @@ export default function InstagramReels() {
                 </div>
               ) : (
                 <PlaceholderTile key={i} index={i} />
-              ),
+              )
             )}
           </div>
         )}
