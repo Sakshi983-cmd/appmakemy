@@ -32,18 +32,37 @@ export default function InstagramReels() {
   const hasWidget = WIDGET_EMBED_HTML.trim().length > 0;
   const reels = REEL_URLS.slice(0, 9).filter(Boolean);
   const [current, setCurrent] = useState(0);
+  // Track which iframes have been loaded (preloaded)
+  const [loaded, setLoaded] = useState<boolean[]>(() => reels.map((_, i) => i === 0));
 
-  // Auto-slide every 5 seconds
+  // Auto-slide every 15 seconds (enough time for iframe to load + user to see)
   useEffect(() => {
     if (reels.length <= 1) return;
     const timer = setInterval(() => {
-      setCurrent((prev) => (prev + 1) % reels.length);
-    }, 5000);
+      setCurrent((prev) => {
+        const next = (prev + 1) % reels.length;
+        setLoaded((l) => {
+          const copy = [...l];
+          copy[next] = true;
+          return copy;
+        });
+        return next;
+      });
+    }, 15000);
     return () => clearInterval(timer);
   }, [reels.length]);
 
-  const prev = () => setCurrent((c) => (c - 1 + reels.length) % reels.length);
-  const next = () => setCurrent((c) => (c + 1) % reels.length);
+  const goTo = (idx: number) => {
+    setLoaded((l) => {
+      const copy = [...l];
+      copy[idx] = true;
+      return copy;
+    });
+    setCurrent(idx);
+  };
+
+  const prev = () => goTo((current - 1 + reels.length) % reels.length);
+  const next = () => goTo((current + 1) % reels.length);
 
   if (hasWidget) {
     return (
@@ -58,6 +77,7 @@ export default function InstagramReels() {
   return (
     <section id="reels" className="py-16 sm:py-24 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Header */}
         <div className="text-center mb-10">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-pink-50 border border-pink-200 text-pink-600 text-sm font-medium mb-3">
             <Instagram className="w-4 h-4" /> {INSTAGRAM_HANDLE}
@@ -80,6 +100,7 @@ export default function InstagramReels() {
           </div>
         ) : (
           <div className="flex flex-col items-center gap-6">
+            {/* Reel viewer */}
             <div className="relative flex items-center justify-center w-full">
               {reels.length > 1 && (
                 <button
@@ -90,16 +111,28 @@ export default function InstagramReels() {
                 </button>
               )}
 
-              <div className="w-[260px] sm:w-[300px] aspect-[9/16] rounded-2xl overflow-hidden border border-gray-200 bg-black shadow-2xl">
-                <iframe
-                  key={current}
-                  src={toEmbedUrl(reels[current])}
-                  title={`Instagram reel ${current + 1}`}
-                  loading="lazy"
-                  allow="encrypted-media; autoplay"
-                  allowFullScreen
-                  className="w-full h-full"
-                />
+              {/* Fixed size container — full reel height visible */}
+              <div className="relative w-[320px] sm:w-[360px]" style={{ aspectRatio: "9/16", maxHeight: "620px" }}>
+                {reels.map((url, i) => (
+                  <div
+                    key={url}
+                    className="absolute inset-0 rounded-2xl overflow-hidden border border-gray-200 bg-black shadow-2xl transition-opacity duration-500"
+                    style={{ opacity: i === current ? 1 : 0, pointerEvents: i === current ? "auto" : "none" }}
+                  >
+                    {/* Only render iframe once it's been "loaded" (visited) */}
+                    {loaded[i] && (
+                      <iframe
+                        src={toEmbedUrl(url)}
+                        title={`Instagram reel ${i + 1}`}
+                        loading="lazy"
+                        allow="encrypted-media; autoplay"
+                        allowFullScreen
+                        className="w-full h-full"
+                        style={{ border: "none" }}
+                      />
+                    )}
+                  </div>
+                ))}
               </div>
 
               {reels.length > 1 && (
@@ -112,12 +145,13 @@ export default function InstagramReels() {
               )}
             </div>
 
+            {/* Dot indicators */}
             {reels.length > 1 && (
               <div className="flex gap-2">
                 {reels.map((_, i) => (
                   <button
                     key={i}
-                    onClick={() => setCurrent(i)}
+                    onClick={() => goTo(i)}
                     className={`h-2 rounded-full transition-all ${
                       i === current ? "w-6 bg-pink-500" : "w-2 bg-gray-300"
                     }`}
@@ -125,9 +159,23 @@ export default function InstagramReels() {
                 ))}
               </div>
             )}
+
+            {/* Auto-advance progress bar */}
+            {reels.length > 1 && (
+              <div className="w-[320px] sm:w-[360px] h-0.5 bg-gray-100 rounded-full overflow-hidden">
+                <div
+                  key={current}
+                  className="h-full bg-pink-400 rounded-full"
+                  style={{
+                    animation: "reelProgress 15s linear forwards",
+                  }}
+                />
+              </div>
+            )}
           </div>
         )}
 
+        {/* Follow button */}
         <div className="text-center mt-10">
           <a
             href={INSTAGRAM_PROFILE_URL}
@@ -140,6 +188,14 @@ export default function InstagramReels() {
           </a>
         </div>
       </div>
+
+      {/* Progress bar animation */}
+      <style>{`
+        @keyframes reelProgress {
+          from { width: 0%; }
+          to { width: 100%; }
+        }
+      `}</style>
     </section>
   );
 }
