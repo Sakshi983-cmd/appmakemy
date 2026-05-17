@@ -196,17 +196,12 @@ function NewsCard({ post, variant = "featured" }: NewsCardProps) {
           {source ? (
             <span className="text-[11px] text-gray-400 truncate max-w-[60%]">{source}</span>
           ) : <span />}
-          <a
-            href={href}
-            target={external ? "_blank" : "_self"}
-            rel="noopener noreferrer"
-            className="text-xs md:text-sm font-semibold text-indigo-600 hover:text-indigo-700"
-          >
+          <span className="text-xs md:text-sm font-semibold text-indigo-600 group-hover:text-indigo-700">
             Read more →
-          </a>
+          </span>
         </div>
       </div>
-    </article>
+    </Wrapper>
   );
 }
 
