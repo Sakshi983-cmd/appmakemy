@@ -149,9 +149,15 @@ function NewsCard({ post, variant = "featured" }: NewsCardProps) {
   const favicon = faviconFor(post.url);
   const source = post.url ? (() => { try { return new URL(post.url).hostname.replace(/^www\./, ""); } catch { return null; } })() : null;
 
+  const Wrapper: any = external ? "a" : Link;
+  const wrapperProps: any = external
+    ? { href, target: "_blank", rel: "noopener noreferrer" }
+    : { to: href };
+
   return (
-    <article
-      className={`group news-card bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 ease-out flex flex-col ${
+    <Wrapper
+      {...wrapperProps}
+      className={`group news-card block bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 ease-out flex flex-col cursor-pointer ${
         variant === "featured"
           ? "min-w-[85%] sm:min-w-[280px] md:w-[calc(20%-13px)] md:min-w-0 snap-start flex-shrink-0"
           : ""
