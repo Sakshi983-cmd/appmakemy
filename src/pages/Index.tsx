@@ -12,6 +12,7 @@ import { supabase } from "@/integrations/supabase/client";
 import qviqLogo from "@/assets/qviq-logo.png";
 import dmaLogo from "@/assets/dma-logo.png";
 import LatestAINews from "@/components/LatestAINews";
+import InstagramReels from "@/components/InstagramReels";
 
 const CUSTOM_LOGOS: Record<string, string> = {
   "qviq.io": qviqLogo,
@@ -239,13 +240,27 @@ function ChatPanel({ open, onClose }: { open: boolean; onClose: () => void }) {
                   </div>
                 </div>
               )}
-              {messages.map((m, i) => (
-                <div key={i} className={`flex ${m.role === "user" ? "justify-end" : "justify-start"}`}>
-                  <div className={`max-w-[85%] rounded-2xl px-4 py-2.5 text-sm leading-relaxed whitespace-pre-wrap ${m.role === "user" ? "bg-gradient-to-r from-violet-600 to-violet-700 text-white rounded-br-md" : "bg-white text-gray-700 rounded-bl-md shadow-sm"}`}>
-                    {m.content}
+              {messages.map((m, i) => {
+                const hasContact = m.role === "assistant" && m.content.includes("[[CONTACT_ACTIONS]]");
+                const cleanContent = hasContact ? m.content.replace("[[CONTACT_ACTIONS]]", "").trim() : m.content;
+                return (
+                  <div key={i} className={`flex flex-col ${m.role === "user" ? "items-end" : "items-start"}`}>
+                    <div className={`max-w-[85%] rounded-2xl px-4 py-2.5 text-sm leading-relaxed whitespace-pre-wrap ${m.role === "user" ? "bg-gradient-to-r from-violet-600 to-violet-700 text-white rounded-br-md" : "bg-white text-gray-700 rounded-bl-md shadow-sm"}`}>
+                      {cleanContent}
+                    </div>
+                    {hasContact && (
+                      <div className="mt-2 flex flex-wrap gap-2 max-w-[85%]">
+                        <a href="tel:+919242424232" className="inline-flex items-center gap-2 px-4 py-2.5 rounded-full bg-gradient-to-r from-orange-500 to-orange-600 text-white text-sm font-semibold shadow-md hover:scale-105 transition-transform">
+                          <Phone className="w-4 h-4" /> Call Us
+                        </a>
+                        <a href="https://wa.me/919242424232" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-4 py-2.5 rounded-full bg-gradient-to-r from-green-500 to-green-600 text-white text-sm font-semibold shadow-md hover:scale-105 transition-transform">
+                          <MessageSquare className="w-4 h-4" /> WhatsApp Us
+                        </a>
+                      </div>
+                    )}
                   </div>
-                </div>
-              ))}
+                );
+              })}
               {thinking && (
                 <div className="flex justify-start">
                   <div className="rounded-2xl px-4 py-3 bg-white shadow-sm">
@@ -817,6 +832,9 @@ const Index = () => {
           </Button>
         </div>
       </section>
+
+      {/* Instagram Reels (3x3) */}
+      <InstagramReels />
 
       {/* Footer */}
       <footer className="bg-white text-gray-600 pt-12 pb-8 relative border-t border-gray-100">

@@ -149,9 +149,15 @@ function NewsCard({ post, variant = "featured" }: NewsCardProps) {
   const favicon = faviconFor(post.url);
   const source = post.url ? (() => { try { return new URL(post.url).hostname.replace(/^www\./, ""); } catch { return null; } })() : null;
 
+  const Wrapper: any = external ? "a" : Link;
+  const wrapperProps: any = external
+    ? { href, target: "_blank", rel: "noopener noreferrer" }
+    : { to: href };
+
   return (
-    <article
-      className={`group news-card bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 ease-out flex flex-col ${
+    <Wrapper
+      {...wrapperProps}
+      className={`group news-card block bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 ease-out flex flex-col cursor-pointer ${
         variant === "featured"
           ? "min-w-[85%] sm:min-w-[280px] md:w-[calc(20%-13px)] md:min-w-0 snap-start flex-shrink-0"
           : ""
@@ -190,23 +196,17 @@ function NewsCard({ post, variant = "featured" }: NewsCardProps) {
           {source ? (
             <span className="text-[11px] text-gray-400 truncate max-w-[60%]">{source}</span>
           ) : <span />}
-          <a
-            href={href}
-            target={external ? "_blank" : "_self"}
-            rel="noopener noreferrer"
-            className="text-xs md:text-sm font-semibold text-indigo-600 hover:text-indigo-700"
-          >
+          <span className="text-xs md:text-sm font-semibold text-indigo-600 group-hover:text-indigo-700">
             Read more →
-          </a>
+          </span>
         </div>
       </div>
-    </article>
+    </Wrapper>
   );
 }
 
 export default function LatestAINews() {
   const [latest, setLatest] = useState<NewsPost[] | null>(null);
-  const [older, setOlder] = useState<NewsPost[]>([]);
 
   useEffect(() => {
     let alive = true;
@@ -215,16 +215,10 @@ export default function LatestAINews() {
         .from("ai_blogs")
         .select("*")
         .order("published_date", { ascending: false })
-        .limit(20);
+        .limit(5);
       if (!alive) return;
       const rows = (data ?? []) as NewsPost[];
-      if (rows.length >= 1) {
-        setLatest(rows.slice(0, 5));
-        setOlder(rows.slice(5, 20));
-      } else {
-        setLatest(FALLBACK);
-        setOlder([]);
-      }
+      setLatest(rows.length >= 1 ? rows.slice(0, 5) : FALLBACK);
     })();
     return () => { alive = false; };
   }, []);
@@ -235,7 +229,7 @@ export default function LatestAINews() {
         <div className="flex items-end justify-between mb-4 gap-4">
           <div className="flex flex-col gap-2">
             <h2 className="text-2xl md:text-3xl lg:text-4xl font-extrabold text-gray-900">🔥 Latest AI News</h2>
-            <p className="text-xs md:text-sm text-gray-500">Updated daily • Powered by AI</p>
+            <p className="text-xs md:text-sm text-gray-500">Top 5 stories • Updated daily • Plain-English summaries</p>
           </div>
           <Link
             to="/ai-news"
@@ -252,18 +246,6 @@ export default function LatestAINews() {
             ? Array.from({ length: 5 }).map((_, i) => <CardSkeleton key={i} />)
             : latest.map((post) => <NewsCard key={post.id} post={post} variant="featured" />)}
         </div>
-
-        {/* Older grid */}
-        {older.length > 0 && (
-          <div className="mt-10">
-            <h3 className="text-lg font-bold text-gray-900 mb-4">More AI News</h3>
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {older.map((post) => (
-                <NewsCard key={post.id} post={post} variant="compact" />
-              ))}
-            </div>
-          </div>
-        )}
       </div>
     </section>
   );
