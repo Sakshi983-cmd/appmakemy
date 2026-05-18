@@ -3,13 +3,13 @@ import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { fetchAndUpdateNews, shouldFetchToday, type NewsPost } from "@/lib/newsService";
 
-// ── Fallback data (shown if Supabase empty + RSS fails) ───────────────────────
+// ── Fallback data ─────────────────────────────────────────────────────────────
 const FALLBACK: NewsPost[] = [
   {
     id: "fb-1",
     title: "🤯 A Computer Just Got So Smart, It Shocked Scientists!",
     excerpt: "It answers hard questions, writes stories, and even solves math — all by itself. Scientists are amazed!",
-    image_url: null,
+    image_url: "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800&q=80",
     category: "AI Research",
     published_date: new Date(Date.now() - 2 * 3600 * 1000).toISOString(),
     url: "https://openai.com/blog",
@@ -18,7 +18,7 @@ const FALLBACK: NewsPost[] = [
     id: "fb-2",
     title: "😮 Google Made a Computer That Can See AND Talk!",
     excerpt: "Show it any photo and it tells you what is in it — like a genius friend who knows everything!",
-    image_url: null,
+    image_url: "https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=800&q=80",
     category: "Industry News",
     published_date: new Date(Date.now() - 5 * 3600 * 1000).toISOString(),
     url: "https://deepmind.google/discover/blog",
@@ -27,7 +27,7 @@ const FALLBACK: NewsPost[] = [
     id: "fb-3",
     title: "💡 Microsoft Put a Smart Robot Inside Your Computer!",
     excerpt: "Open Word or Excel and a helpful robot is already there — it writes, counts and fixes things for you!",
-    image_url: null,
+    image_url: "https://images.unsplash.com/photo-1531297484001-80022131f5a1?w=800&q=80",
     category: "AI Tools",
     published_date: new Date(Date.now() - 26 * 3600 * 1000).toISOString(),
     url: "https://blogs.microsoft.com",
@@ -36,7 +36,7 @@ const FALLBACK: NewsPost[] = [
     id: "fb-4",
     title: "🏥 This Computer Finds Sickness Better Than Real Doctors!",
     excerpt: "Out of 100 sick people, this smart computer found 96 of them — doctors could not believe it!",
-    image_url: null,
+    image_url: "https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=800&q=80",
     category: "Healthcare AI",
     published_date: new Date(Date.now() - 2 * 86400 * 1000).toISOString(),
     url: "https://www.nature.com",
@@ -45,7 +45,7 @@ const FALLBACK: NewsPost[] = [
     id: "fb-5",
     title: "📜 Europe Just Made Big Rules for Smart Computers!",
     excerpt: "Just like traffic rules keep roads safe, Europe made rules to make sure computers are never used to harm people!",
-    image_url: null,
+    image_url: "https://images.unsplash.com/photo-1589994965851-a8f479c573a9?w=800&q=80",
     category: "Policy",
     published_date: new Date(Date.now() - 3 * 86400 * 1000).toISOString(),
     url: "https://europa.eu",
@@ -54,17 +54,17 @@ const FALLBACK: NewsPost[] = [
 
 // ── Category images ───────────────────────────────────────────────────────────
 const CATEGORY_IMAGES: Record<string, string> = {
-  "AI Research":     "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800&q=80",
-  "Industry News":   "https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=800&q=80",
-  "AI Tools":        "https://images.unsplash.com/photo-1531297484001-80022131f5a1?w=800&q=80",
-  "Healthcare AI":   "https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=800&q=80",
-  "Policy":          "https://images.unsplash.com/photo-1589994965851-a8f479c573a9?w=800&q=80",
-  "Tutorials":       "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=800&q=80",
-  "Breaking":        "https://images.unsplash.com/photo-1495020689067-958852a7765e?w=800&q=80",
-  "Tech":            "https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&q=80",
-  "Machine Learning":"https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=800&q=80",
-  "Robotics":        "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=800&q=80",
-  "Startups":        "https://images.unsplash.com/photo-1559136555-9303baea8ebd?w=800&q=80",
+  "AI Research":      "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800&q=80",
+  "Industry News":    "https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=800&q=80",
+  "AI Tools":         "https://images.unsplash.com/photo-1531297484001-80022131f5a1?w=800&q=80",
+  "Healthcare AI":    "https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=800&q=80",
+  "Policy":           "https://images.unsplash.com/photo-1589994965851-a8f479c573a9?w=800&q=80",
+  "Tutorials":        "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=800&q=80",
+  "Breaking":         "https://images.unsplash.com/photo-1495020689067-958852a7765e?w=800&q=80",
+  "Tech":             "https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&q=80",
+  "Machine Learning": "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=800&q=80",
+  "Robotics":         "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=800&q=80",
+  "Startups":         "https://images.unsplash.com/photo-1559136555-9303baea8ebd?w=800&q=80",
 };
 
 const DEFAULT_NEWS_IMG =
@@ -74,18 +74,6 @@ function imageFor(post: NewsPost): string {
   if (post.image_url && /^https?:\/\//i.test(post.image_url)) return post.image_url;
   if (post.category && CATEGORY_IMAGES[post.category]) return CATEGORY_IMAGES[post.category];
   return DEFAULT_NEWS_IMG;
-}
-
-function badgeColor(category: string): string {
-  const c = category.toLowerCase();
-  if (c.includes("break")) return "bg-red-600";
-  if (c.includes("ai") || c.includes("machine")) return "bg-blue-600";
-  if (c.includes("tech") || c.includes("tool")) return "bg-emerald-600";
-  if (c.includes("health")) return "bg-pink-600";
-  if (c.includes("policy") || c.includes("law")) return "bg-slate-700";
-  if (c.includes("tutorial")) return "bg-amber-500";
-  if (c.includes("startup") || c.includes("industry")) return "bg-indigo-600";
-  return "bg-violet-600";
 }
 
 function relativeTime(publishedDate: string) {
@@ -99,12 +87,6 @@ function relativeTime(publishedDate: string) {
   const diffD = Math.floor(diffH / 24);
   if (diffD === 1) return "Yesterday";
   return `${diffD}d ago`;
-}
-
-function cardHref(post: NewsPost): { href: string; external: boolean } {
-  if (post.url) return { href: post.url, external: true };
-  if (post.slug) return { href: `/ai-news/${post.slug}`, external: false };
-  return { href: "/ai-news", external: false };
 }
 
 function faviconFor(url?: string | null): string | null {
@@ -131,14 +113,13 @@ function CardSkeleton() {
   );
 }
 
-// ── News Card — ENTIRE CARD is now clickable ──────────────────────────────────
+// ── News Card — always links to /ai-news ──────────────────────────────────────
 interface NewsCardProps {
   post: NewsPost;
   variant?: "featured" | "compact";
 }
 
 function NewsCard({ post, variant = "featured" }: NewsCardProps) {
-  const { href, external } = cardHref(post);
   const img = imageFor(post);
   const favicon = faviconFor(post.url);
   const source = post.url
@@ -152,31 +133,30 @@ function NewsCard({ post, variant = "featured" }: NewsCardProps) {
     : null;
 
   return (
-    <a
-      href={href}
-      target={external ? "_blank" : "_self"}
-      rel="noopener noreferrer"
+    <Link
+      to="/ai-news"
       className={`group news-card block bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 ease-out cursor-pointer no-underline ${
         variant === "featured"
           ? "min-w-[85%] sm:min-w-[280px] md:w-[calc(20%-13px)] md:min-w-0 snap-start flex-shrink-0"
           : "flex flex-col"
       }`}
     >
-      {/* Image with overlays */}
+      {/* Image */}
       <div className="relative w-full aspect-video overflow-hidden bg-gray-100">
         <img
           src={img}
           alt={post.title}
           loading="lazy"
           onError={(e) => {
-            (e.currentTarget as HTMLImageElement).src = DEFAULT_NEWS_IMG;
+            const el = e.currentTarget as HTMLImageElement;
+            if (el.src !== DEFAULT_NEWS_IMG) el.src = DEFAULT_NEWS_IMG;
           }}
           className="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
         />
         {/* Gradient overlay */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent pointer-events-none" />
 
-        {/* Timestamp bottom-right — no category badge */}
+        {/* Timestamp bottom-right */}
         <div className="absolute bottom-2 right-3 flex items-center gap-1.5 text-white text-[11px] font-medium drop-shadow">
           {favicon && (
             <img src={favicon} alt="" className="w-3.5 h-3.5 rounded-sm" />
@@ -202,11 +182,11 @@ function NewsCard({ post, variant = "featured" }: NewsCardProps) {
             <span />
           )}
           <span className="inline-flex items-center gap-1 text-xs md:text-sm font-bold text-white bg-indigo-600 group-hover:bg-indigo-700 px-3 py-1.5 rounded-full transition-colors">
-            Read Full Story →
+            Read More →
           </span>
         </div>
       </div>
-    </a>
+    </Link>
   );
 }
 
@@ -220,11 +200,10 @@ export default function LatestAINews() {
     let alive = true;
 
     (async () => {
-      // Show simple fallback immediately
+      // Show fallback immediately
       setLatest(FALLBACK);
       setOlder([]);
 
-      // Always try to fetch fresh simple news from RSS
       setRefreshing(true);
       try {
         const fresh = await fetchAndUpdateNews();
@@ -234,7 +213,7 @@ export default function LatestAINews() {
           setOlder(fresh.slice(5));
         }
       } catch {
-        // Fallback already shown above
+        // Fallback already shown
       } finally {
         if (alive) setRefreshing(false);
       }
@@ -296,6 +275,16 @@ export default function LatestAINews() {
             </div>
           </div>
         )}
+
+        {/* Mobile view all */}
+        <div className="sm:hidden text-center mt-6">
+          <Link
+            to="/ai-news"
+            className="inline-flex items-center gap-1 text-sm font-semibold text-indigo-600 hover:text-indigo-700"
+          >
+            View all AI News →
+          </Link>
+        </div>
       </div>
     </section>
   );
