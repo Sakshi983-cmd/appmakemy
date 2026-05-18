@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import { Instagram, ChevronLeft, ChevronRight } from "lucide-react";
 import {
   INSTAGRAM_PROFILE_URL,
@@ -28,41 +28,39 @@ function WidgetEmbed({ html }: { html: string }) {
   return <div ref={ref} className="w-full" />;
 }
 
+// How to add more reels:
+// Go to instagram.com → open any reel → copy the URL from the address bar
+// Add it to REEL_URLS in src/config/instagramReels.ts
+// Example: "https://www.instagram.com/reel/CxxxxxxxXxx/"
+
 export default function InstagramReels() {
   const hasWidget = WIDGET_EMBED_HTML.trim().length > 0;
   const reels = REEL_URLS.slice(0, 9).filter(Boolean);
   const [current, setCurrent] = useState(0);
-  // Track which iframes have been loaded (preloaded)
-  const [loaded, setLoaded] = useState<boolean[]>(() => reels.map((_, i) => i === 0));
+  const [transitioning, setTransitioning] = useState(false);
+  // Preload all reels from the start so they're ready
+  const [loaded, setLoaded] = useState<boolean[]>(() => reels.map(() => true));
 
-  // Auto-slide every 15 seconds (enough time for iframe to load + user to see)
+  const goTo = useCallback((idx: number) => {
+    if (idx === current || transitioning) return;
+    setTransitioning(true);
+    setTimeout(() => {
+      setCurrent(idx);
+      setTransitioning(false);
+    }, 300);
+  }, [current, transitioning]);
+
+  const prev = useCallback(() => goTo((current - 1 + reels.length) % reels.length), [goTo, current, reels.length]);
+  const next = useCallback(() => goTo((current + 1) % reels.length), [goTo, current, reels.length]);
+
+  // Auto-slide every 15 seconds
   useEffect(() => {
     if (reels.length <= 1) return;
     const timer = setInterval(() => {
-      setCurrent((prev) => {
-        const next = (prev + 1) % reels.length;
-        setLoaded((l) => {
-          const copy = [...l];
-          copy[next] = true;
-          return copy;
-        });
-        return next;
-      });
+      setCurrent((prev) => (prev + 1) % reels.length);
     }, 15000);
     return () => clearInterval(timer);
   }, [reels.length]);
-
-  const goTo = (idx: number) => {
-    setLoaded((l) => {
-      const copy = [...l];
-      copy[idx] = true;
-      return copy;
-    });
-    setCurrent(idx);
-  };
-
-  const prev = () => goTo((current - 1 + reels.length) % reels.length);
-  const next = () => goTo((current + 1) % reels.length);
 
   if (hasWidget) {
     return (
@@ -88,6 +86,11 @@ export default function InstagramReels() {
           <p className="text-gray-500 mt-3 max-w-xl mx-auto">
             Behind-the-scenes, build logs, and quick tips — straight from our Instagram.
           </p>
+          {/* Tip for adding more reels */}
+          <p className="text-xs text-gray-400 mt-2">
+            💡 To add more reels: paste Instagram reel URLs in{" "}
+            <code className="bg-gray-100 px-1 rounded">src/config/instagramReels.ts</code>
+          </p>
         </div>
 
         {reels.length === 0 ? (
@@ -111,15 +114,23 @@ export default function InstagramReels() {
                 </button>
               )}
 
-              {/* Fixed size container — full reel height visible */}
-              <div className="relative w-[320px] sm:w-[360px]" style={{ aspectRatio: "9/16", maxHeight: "620px" }}>
+              {/* Fixed size container */}
+              <div
+                className="relative w-[320px] sm:w-[360px]"
+                style={{ aspectRatio: "9/16", maxHeight: "640px" }}
+              >
                 {reels.map((url, i) => (
                   <div
                     key={url}
-                    className="absolute inset-0 rounded-2xl overflow-hidden border border-gray-200 bg-black shadow-2xl transition-opacity duration-500"
-                    style={{ opacity: i === current ? 1 : 0, pointerEvents: i === current ? "auto" : "none" }}
+                    className="absolute inset-0 rounded-2xl overflow-hidden border border-gray-200 bg-black shadow-2xl"
+                    style={{
+                      opacity: transitioning ? 0 : i === current ? 1 : 0,
+                      transform: i === current ? "scale(1)" : "scale(0.97)",
+                      transition: "opacity 0.4s ease, transform 0.4s ease",
+                      pointerEvents: i === current ? "auto" : "none",
+                      zIndex: i === current ? 2 : 1,
+                    }}
                   >
-                    {/* Only render iframe once it's been "loaded" (visited) */}
                     {loaded[i] && (
                       <iframe
                         src={toEmbedUrl(url)}
@@ -145,6 +156,11 @@ export default function InstagramReels() {
               )}
             </div>
 
+            {/* Reel counter */}
+            <p className="text-sm text-gray-400 font-medium">
+              {current + 1} / {reels.length}
+            </p>
+
             {/* Dot indicators */}
             {reels.length > 1 && (
               <div className="flex gap-2">
@@ -152,7 +168,7 @@ export default function InstagramReels() {
                   <button
                     key={i}
                     onClick={() => goTo(i)}
-                    className={`h-2 rounded-full transition-all ${
+                    className={`h-2 rounded-full transition-all duration-300 ${
                       i === current ? "w-6 bg-pink-500" : "w-2 bg-gray-300"
                     }`}
                   />
@@ -199,3 +215,4 @@ export default function InstagramReels() {
     </section>
   );
 }
+  
