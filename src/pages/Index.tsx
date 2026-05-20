@@ -552,32 +552,127 @@ const Index = () => {
       </section>
 
       {/* Process */}
-      <section className="py-16 sm:py-24 bg-white">
+      {/* Process */}
+      <section className="py-16 sm:py-24 bg-white overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-gray-900 mb-4">Our Process</h2>
-            <p className="text-gray-500 max-w-2xl mx-auto text-lg">A streamlined approach to high-quality delivery.</p>
+          <div className="text-center mb-16">
+            <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+              className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-orange-50 border border-orange-200 text-orange-700 text-sm font-medium mb-4">
+              How we work
+            </motion.div>
+            <motion.h2 initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.1 }}
+              className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-gray-900 mb-4">Our Process</motion.h2>
+            <motion.p initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ delay: 0.2 }}
+              className="text-gray-500 max-w-2xl mx-auto text-lg">From your first idea to a live product — here's exactly how we make it happen.</motion.p>
           </div>
-          <div className="relative">
-            {/* connector line */}
-            <div className="hidden md:block absolute top-12 left-[10%] right-[10%] h-0.5 bg-gradient-to-r from-violet-300 via-orange-300 to-rose-300 opacity-60" />
-            <div className="grid grid-cols-2 md:grid-cols-5 gap-4 lg:gap-6 relative">
+
+          {/* Desktop timeline */}
+          <div className="hidden md:block relative">
+            {/* Animated line */}
+            <div className="absolute top-16 left-[10%] right-[10%] h-[2px] bg-gray-100 overflow-hidden">
+              <motion.div
+                initial={{ scaleX: 0, originX: 0 }}
+                whileInView={{ scaleX: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 1.2, ease: "easeInOut", delay: 0.3 }}
+                className="h-full w-full"
+                style={{ background: "linear-gradient(90deg, #7C3AED, #F97316, #EA580C)" }}
+              />
+            </div>
+            <div className="grid grid-cols-5 gap-4 relative">
               {PROCESS.map((s, i) => (
-                <motion.div key={i} initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}
-                  className="group text-center relative">
-                  <div className="relative w-24 h-24 mx-auto mb-4">
-                    <div className="absolute inset-0 rounded-full blur-xl opacity-40 group-hover:opacity-70 transition-opacity" style={{ background: s.color }} />
-                    <div className="relative w-24 h-24 rounded-full flex items-center justify-center bg-white border-4 shadow-xl group-hover:scale-110 group-hover:-rotate-6 transition-all duration-500" style={{ borderColor: s.color }}>
-                      <s.icon className="w-9 h-9" style={{ color: s.color }} strokeWidth={2.2} />
+                <motion.div key={i}
+                  initial={{ opacity: 0, y: 40 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: 0.2 + i * 0.15, type: "spring", stiffness: 100 }}
+                  className="group text-center relative flex flex-col items-center"
+                >
+                  {/* Step number bubble */}
+                  <div className="relative mb-5">
+                    <motion.div
+                      whileHover={{ scale: 1.15, rotate: -8 }}
+                      transition={{ type: "spring", stiffness: 300 }}
+                      className="relative w-[72px] h-[72px] rounded-2xl flex items-center justify-center shadow-xl border-2 bg-white z-10"
+                      style={{ borderColor: s.color }}
+                    >
+                      {/* Glow */}
+                      <div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-30 transition-opacity duration-500 blur-xl"
+                        style={{ background: s.color }} />
+                      <s.icon className="w-7 h-7 relative z-10" style={{ color: s.color }} strokeWidth={2.2} />
+                    </motion.div>
+                    {/* Step badge */}
+                    <div className="absolute -top-2 -right-2 w-6 h-6 rounded-full text-white text-[11px] font-black flex items-center justify-center shadow-lg ring-2 ring-white z-20"
+                      style={{ background: s.color }}>
+                      {i + 1}
                     </div>
-                    <div className="absolute -top-1 -right-1 w-9 h-9 rounded-full text-white text-sm font-black flex items-center justify-center shadow-lg ring-4 ring-white" style={{ background: s.color }}>{i + 1}</div>
                   </div>
-                  <h3 className="text-base font-bold text-gray-900 mb-2">{s.title}</h3>
-                  <p className="text-sm text-gray-500 leading-relaxed">{s.desc}</p>
+                  <h3 className="text-sm font-bold text-gray-900 mb-1.5">{s.title}</h3>
+                  <p className="text-xs text-gray-500 leading-relaxed px-2">{s.desc}</p>
+                  {/* Connector arrow (not last) */}
+                  {i < PROCESS.length - 1 && (
+                    <motion.div
+                      initial={{ opacity: 0 }}
+                      whileInView={{ opacity: 1 }}
+                      viewport={{ once: true }}
+                      transition={{ delay: 0.5 + i * 0.15 }}
+                      className="absolute top-9 -right-3 z-20 text-gray-300 hidden lg:block"
+                    >
+                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                        <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                      </svg>
+                    </motion.div>
+                  )}
                 </motion.div>
               ))}
             </div>
           </div>
+
+          {/* Mobile — vertical stepper */}
+          <div className="md:hidden space-y-0">
+            {PROCESS.map((s, i) => (
+              <motion.div key={i}
+                initial={{ opacity: 0, x: -30 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1, type: "spring", stiffness: 120 }}
+                className="flex gap-4 relative"
+              >
+                {/* Left: icon + vertical line */}
+                <div className="flex flex-col items-center">
+                  <div className="w-12 h-12 rounded-xl border-2 bg-white shadow-md flex items-center justify-center shrink-0 relative z-10"
+                    style={{ borderColor: s.color }}>
+                    <s.icon className="w-5 h-5" style={{ color: s.color }} strokeWidth={2.2} />
+                    <div className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full text-white text-[10px] font-black flex items-center justify-center shadow ring-2 ring-white"
+                      style={{ background: s.color }}>{i + 1}</div>
+                  </div>
+                  {i < PROCESS.length - 1 && (
+                    <div className="w-[2px] flex-1 my-1" style={{ background: `${s.color}40`, minHeight: 24 }} />
+                  )}
+                </div>
+                {/* Right: text */}
+                <div className="pb-6 pt-1">
+                  <h3 className="text-sm font-bold text-gray-900 mb-1">{s.title}</h3>
+                  <p className="text-xs text-gray-500 leading-relaxed">{s.desc}</p>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+
+          {/* Bottom CTA */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.6 }}
+            className="mt-14 text-center"
+          >
+            <p className="text-sm text-gray-400 mb-4">Average project turnaround: <span className="font-semibold text-gray-700">2–6 weeks</span></p>
+            <button onClick={openCalendly}
+              className="inline-flex items-center gap-2 px-7 py-3 rounded-full bg-gradient-to-r from-violet-600 to-orange-500 text-white text-sm font-semibold shadow-lg shadow-orange-500/20 hover:scale-105 transition-transform">
+              Start Your Project <ArrowRight className="w-4 h-4" />
+            </button>
+          </motion.div>
         </div>
       </section>
 
