@@ -552,106 +552,206 @@ const Index = () => {
       </section>
 
       {/* Process */}
-      {/* Process */}
+     {/* Process */}
       <section className="py-16 sm:py-24 bg-white overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
-              className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-orange-50 border border-orange-200 text-orange-700 text-sm font-medium mb-4">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-orange-50 border border-orange-200 text-orange-700 text-sm font-medium mb-4"
+            >
               How we work
             </motion.div>
-            <motion.h2 initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.1 }}
-              className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-gray-900 mb-4">Our Process</motion.h2>
-            <motion.p initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ delay: 0.2 }}
-              className="text-gray-500 max-w-2xl mx-auto text-lg">From your first idea to a live product — here's exactly how we make it happen.</motion.p>
+            <motion.h2
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.1 }}
+              className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-gray-900 mb-4"
+            >
+              Our Process
+            </motion.h2>
+            <motion.p
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.2 }}
+              className="text-gray-500 max-w-2xl mx-auto text-lg"
+            >
+              From your first idea to a live product — here's exactly how we make it happen.
+            </motion.p>
           </div>
 
-          {/* Desktop timeline */}
-          <div className="hidden md:block relative">
-            {/* Animated line */}
-            <div className="absolute top-16 left-[10%] right-[10%] h-[2px] bg-gray-100 overflow-hidden">
+          {/* Desktop Timeline */}
+          <div className="hidden md:block relative px-4">
+            {/* Animated background track */}
+            <div className="absolute top-[52px] left-[10%] right-[10%] h-[3px] bg-gray-100 rounded-full overflow-hidden">
               <motion.div
-                initial={{ scaleX: 0, originX: 0 }}
+                initial={{ scaleX: 0 }}
                 whileInView={{ scaleX: 1 }}
                 viewport={{ once: true }}
-                transition={{ duration: 1.2, ease: "easeInOut", delay: 0.3 }}
-                className="h-full w-full"
-                style={{ background: "linear-gradient(90deg, #7C3AED, #F97316, #EA580C)" }}
+                transition={{ duration: 1.4, ease: "easeInOut", delay: 0.4 }}
+                className="h-full w-full origin-left rounded-full"
+                style={{ background: "linear-gradient(90deg, #7C3AED, #A855F7, #F97316, #EA580C)" }}
               />
             </div>
-            <div className="grid grid-cols-5 gap-4 relative">
+
+            {/* Traveling pulse dot */}
+            <motion.div
+              initial={{ left: "10%" }}
+              whileInView={{ left: "90%" }}
+              viewport={{ once: true }}
+              transition={{ duration: 2.2, ease: "easeInOut", delay: 1.6 }}
+              className="absolute top-[44px] z-20 pointer-events-none"
+              style={{ position: "absolute" }}
+            >
+              <div className="relative">
+                <div
+                  className="w-4 h-4 rounded-full -translate-x-1/2 -translate-y-1/2"
+                  style={{ background: "linear-gradient(135deg, #7C3AED, #F97316)", boxShadow: "0 0 0 4px rgba(249,115,22,0.25), 0 0 12px rgba(124,58,237,0.5)" }}
+                />
+              </div>
+            </motion.div>
+
+            <div className="grid grid-cols-5 gap-3 relative">
               {PROCESS.map((s, i) => (
-                <motion.div key={i}
-                  initial={{ opacity: 0, y: 40 }}
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, y: 50 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
-                  transition={{ delay: 0.2 + i * 0.15, type: "spring", stiffness: 100 }}
-                  className="group text-center relative flex flex-col items-center"
+                  transition={{ delay: 0.15 + i * 0.18, type: "spring", stiffness: 90, damping: 15 }}
+                  className="group flex flex-col items-center text-center relative"
                 >
-                  {/* Step number bubble */}
-                  <div className="relative mb-5">
+                  {/* Icon card */}
+                  <motion.div
+                    whileHover={{ scale: 1.12, y: -6 }}
+                    transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                    className="relative z-10 w-[76px] h-[76px] rounded-2xl bg-white border-2 flex items-center justify-center mb-5 cursor-pointer"
+                    style={{ borderColor: s.color, boxShadow: `0 4px 16px ${s.color}22` }}
+                  >
+                    {/* Glow on hover */}
+                    <div
+                      className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-all duration-500 blur-lg scale-110"
+                      style={{ background: s.color }}
+                    />
+                    {/* Glassmorphism overlay on hover */}
+                    <div
+                      className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-40 transition-all duration-500"
+                      style={{ background: `linear-gradient(135deg, ${s.color}44, ${s.color}11)`, backdropFilter: "blur(4px)" }}
+                    />
                     <motion.div
-                      whileHover={{ scale: 1.15, rotate: -8 }}
-                      transition={{ type: "spring", stiffness: 300 }}
-                      className="relative w-[72px] h-[72px] rounded-2xl flex items-center justify-center shadow-xl border-2 bg-white z-10"
-                      style={{ borderColor: s.color }}
+                      className="relative z-10"
+                      whileHover={
+                        i === 0
+                          ? { rotate: [0, -10, 10, 0] }
+                          : i === 1
+                          ? { scaleY: [1, 1.3, 1] }
+                          : i === 2
+                          ? { y: [0, -4, 0] }
+                          : i === 3
+                          ? { rotate: 360 }
+                          : { scale: [1, 1.2, 1] }
+                      }
+                      transition={{ duration: 0.5 }}
                     >
-                      {/* Glow */}
-                      <div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-30 transition-opacity duration-500 blur-xl"
-                        style={{ background: s.color }} />
-                      <s.icon className="w-7 h-7 relative z-10" style={{ color: s.color }} strokeWidth={2.2} />
+                      <s.icon className="w-7 h-7 relative z-10 transition-colors duration-300" style={{ color: s.color }} strokeWidth={2.2} />
                     </motion.div>
-                    {/* Step badge */}
-                    <div className="absolute -top-2 -right-2 w-6 h-6 rounded-full text-white text-[11px] font-black flex items-center justify-center shadow-lg ring-2 ring-white z-20"
-                      style={{ background: s.color }}>
+
+                    {/* Step number badge with count-up feel */}
+                    <motion.div
+                      initial={{ scale: 0 }}
+                      whileInView={{ scale: 1 }}
+                      viewport={{ once: true }}
+                      transition={{ delay: 0.3 + i * 0.18, type: "spring", stiffness: 400 }}
+                      className="absolute -top-2.5 -right-2.5 w-6 h-6 rounded-full text-white text-[11px] font-black flex items-center justify-center shadow-lg ring-2 ring-white z-20"
+                      style={{ background: s.color }}
+                    >
                       {i + 1}
-                    </div>
-                  </div>
-                  <h3 className="text-sm font-bold text-gray-900 mb-1.5">{s.title}</h3>
-                  <p className="text-xs text-gray-500 leading-relaxed px-2">{s.desc}</p>
-                  {/* Connector arrow (not last) */}
+                    </motion.div>
+                  </motion.div>
+
+                  {/* Connector arrow between cards */}
                   {i < PROCESS.length - 1 && (
                     <motion.div
-                      initial={{ opacity: 0 }}
-                      whileInView={{ opacity: 1 }}
+                      initial={{ opacity: 0, x: -4 }}
+                      whileInView={{ opacity: 1, x: 0 }}
                       viewport={{ once: true }}
-                      transition={{ delay: 0.5 + i * 0.15 }}
-                      className="absolute top-9 -right-3 z-20 text-gray-300 hidden lg:block"
+                      transition={{ delay: 0.6 + i * 0.18 }}
+                      className="absolute top-[26px] -right-3 z-20 hidden lg:flex items-center justify-center"
                     >
-                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                        <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                      <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+                        <path
+                          d="M3 9h12M11 5l4 4-4 4"
+                          stroke={s.color}
+                          strokeWidth="1.8"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
                       </svg>
                     </motion.div>
                   )}
+
+                  <motion.h3
+                    initial={{ opacity: 0 }}
+                    whileInView={{ opacity: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: 0.25 + i * 0.18 }}
+                    className="text-sm font-bold text-gray-900 mb-1.5 group-hover:text-gray-700 transition-colors"
+                  >
+                    {s.title}
+                  </motion.h3>
+                  <motion.p
+                    initial={{ opacity: 0 }}
+                    whileInView={{ opacity: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: 0.3 + i * 0.18 }}
+                    className="text-xs text-gray-400 leading-relaxed px-1"
+                  >
+                    {s.desc}
+                  </motion.p>
                 </motion.div>
               ))}
             </div>
           </div>
 
-          {/* Mobile — vertical stepper */}
-          <div className="md:hidden space-y-0">
+          {/* Mobile vertical stepper */}
+          <div className="md:hidden space-y-0 px-2">
             {PROCESS.map((s, i) => (
-              <motion.div key={i}
-                initial={{ opacity: 0, x: -30 }}
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, x: -24 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: i * 0.1, type: "spring", stiffness: 120 }}
+                transition={{ delay: i * 0.12, type: "spring", stiffness: 120 }}
                 className="flex gap-4 relative"
               >
-                {/* Left: icon + vertical line */}
+                {/* Left: icon + vertical connector */}
                 <div className="flex flex-col items-center">
-                  <div className="w-12 h-12 rounded-xl border-2 bg-white shadow-md flex items-center justify-center shrink-0 relative z-10"
-                    style={{ borderColor: s.color }}>
+                  <div
+                    className="relative w-12 h-12 rounded-xl border-2 bg-white flex items-center justify-center shrink-0 z-10 shadow-sm"
+                    style={{ borderColor: s.color }}
+                  >
                     <s.icon className="w-5 h-5" style={{ color: s.color }} strokeWidth={2.2} />
-                    <div className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full text-white text-[10px] font-black flex items-center justify-center shadow ring-2 ring-white"
-                      style={{ background: s.color }}>{i + 1}</div>
+                    <div
+                      className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full text-white text-[10px] font-black flex items-center justify-center shadow ring-2 ring-white"
+                      style={{ background: s.color }}
+                    >
+                      {i + 1}
+                    </div>
                   </div>
                   {i < PROCESS.length - 1 && (
-                    <div className="w-[2px] flex-1 my-1" style={{ background: `${s.color}40`, minHeight: 24 }} />
+                    <div
+                      className="w-[2px] my-1"
+                      style={{ background: `${s.color}40`, minHeight: 28 }}
+                    />
                   )}
                 </div>
+
                 {/* Right: text */}
-                <div className="pb-6 pt-1">
+                <div className="pb-5 pt-1">
                   <h3 className="text-sm font-bold text-gray-900 mb-1">{s.title}</h3>
                   <p className="text-xs text-gray-500 leading-relaxed">{s.desc}</p>
                 </div>
@@ -661,15 +761,21 @@ const Index = () => {
 
           {/* Bottom CTA */}
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ delay: 0.6 }}
-            className="mt-14 text-center"
+            transition={{ delay: 0.7 }}
+            className="mt-14 flex flex-col items-center gap-3"
           >
-            <p className="text-sm text-gray-400 mb-4">Average project turnaround: <span className="font-semibold text-gray-700">2–6 weeks</span></p>
-            <button onClick={openCalendly}
-              className="inline-flex items-center gap-2 px-7 py-3 rounded-full bg-gradient-to-r from-violet-600 to-orange-500 text-white text-sm font-semibold shadow-lg shadow-orange-500/20 hover:scale-105 transition-transform">
+            <p className="text-sm text-gray-400">
+              Average turnaround:{" "}
+              <span className="font-semibold text-gray-700">2–6 weeks</span>
+            </p>
+            <button
+              onClick={openCalendly}
+              className="inline-flex items-center gap-2 px-7 py-3 rounded-full text-white text-sm font-semibold shadow-lg hover:scale-105 active:scale-100 transition-transform"
+              style={{ background: "linear-gradient(135deg, #7C3AED, #F97316)", boxShadow: "0 8px 24px rgba(249,115,22,0.25)" }}
+            >
               Start Your Project <ArrowRight className="w-4 h-4" />
             </button>
           </motion.div>
